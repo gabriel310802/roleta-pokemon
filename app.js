@@ -450,24 +450,3 @@ themeToggle.addEventListener('change', toggleTheme);
 // Inicialização da página
 loadTheme();
 atualizarDisplayGeracao();
-// =================================================================
-// REFERÊNCIAS DO DOM (INSIRA ESTE BLOCO AQUI!)
-// =================================================================
-const btnGirar = document.getElementById('btnGirar');
-const btnResetar = document.getElementById('btnResetar');
-const roletaCirculo = document.getElementById('roleta-circulo');
-const resultadosContainer = document.getElementById('resultados-detalhados'); // Corrigido
-const quantidadeSelect = document.getElementById('quantidade');
-const seletorGeracao = document.getElementById('geracao');
-const themeToggle = document.getElementById('darkModeToggle');
-const somRoleta = document.getElementById('somRoleta'); // Corrigido
-
-let currentRotation = 0; 
-const DISTANCIA_DA_BORDA = 470; 
-
-// Cores para os setores da roleta (repetidas)
-const CORES_SETORES = [
-    "#FF6347", "#1E90FF", "#32CD32", "#8A2BE2", "#FF1493", 
-    "#FFD700", "#00CED1", "#FF8C00", "#9400D3", "#ADFF2F", 
-];
-// --- FIM DO BLOCO DE REFERÊNCIAS ---
