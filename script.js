@@ -164,7 +164,7 @@ const seletorGeracao = document.getElementById('geracao');
 const themeToggle = document.getElementById('darkModeToggle');
 
 let currentRotation = 0; 
-// NOVO: Distância para 1000px de diâmetro. (1000/2) - 30 = 470px
+// Distância para 1000px de diâmetro. (1000/2) - 30 = 470px
 const DISTANCIA_DA_BORDA = 470; 
 
 // Cores para os setores da roleta (repetidas)
@@ -187,47 +187,79 @@ function getNomeGeracao(chave) {
     }
 }
 
-// NOVO: preencherRoletaComNomes - Gera o conic-gradient e os nomes na borda
+// NOVO: preencherRoletaComNomes - Cria DIVs de setor individuais com bordas
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo 
 
     const numSetores = lista.length; 
     const anguloPorSetor = 360 / numSetores;
     
-    let gradientColors = [];
+    // Obtém o raio do círculo da roleta
+    const raioRoleta = roletaCirculo.offsetWidth / 2; // 500px para 1000px de diâmetro
     
-    // 1. Gera a string de cores do conic-gradient para as 137+ fatias
-    for (let i = 0; i < numSetores; i++) {
-        const cor = CORES_SETORES[i % CORES_SETORES.length];
-        const anguloFim = ((i + 1) * anguloPorSetor).toFixed(2);
-        const anguloInicio = (i * anguloPorSetor).toFixed(2);
-        gradientColors.push(`${cor} ${anguloInicio}deg ${anguloFim}deg`);
-    }
-
-    // 2. Aplica o conic-gradient no background (cria as 137+ fatias visuais)
-    roletaCirculo.style.background = `conic-gradient(${gradientColors.join(', ')})`;
-    
-    // 3. Posiciona TODOS os nomes na borda
     lista.forEach((nome, i) => {
+        const cor = CORES_SETORES[i % CORES_SETORES.length];
+        
+        // 1. Cria a DIV para o setor (triângulo que preenche o círculo)
+        const setorDiv = document.createElement('div');
+        setorDiv.className = 'setor-roleta-item'; // Nova classe CSS
+        setorDiv.style.backgroundColor = cor; // Cor de fundo
+        setorDiv.style.borderColor = 'black'; // Borda preta
+
+        // Posiciona a base do triângulo no centro e o gira
+        const anguloBase = i * anguloPorSetor;
+        setorDiv.style.transform = `rotate(${anguloBase}deg) skewY(-90deg) translate(0, -50%)`;
+        setorDiv.style.transformOrigin = '0 50%'; // Ponto de rotação no centro esquerdo (origem do triângulo)
+        
+        // Aplica o formato de triângulo
+        setorDiv.style.width = `${raioRoleta}px`; // Largura = Raio
+        setorDiv.style.height = `${raioRoleta * Math.tan(anguloPorSetor * Math.PI / 360)}px`; // Altura = proporcional ao ângulo
+
+        // NOVO: Adiciona CSS para o formato de triângulo
+        setorDiv.style.position = 'absolute';
+        setorDiv.style.top = '50%';
+        setorDiv.style.left = '50%';
+        setorDiv.style.transformOrigin = '0 0';
+        setorDiv.style.overflow = 'hidden';
+
+        // Usa clip-path para criar o formato de fatia de pizza
+        // Os valores são em porcentagem, baseados na ideia de que o "setor-roleta-item" é um retângulo.
+        const clipAngle = anguloPorSetor / 2;
+        const tanClip = Math.tan(clipAngle * Math.PI / 180);
+        setorDiv.style.clipPath = `polygon(0% 0%, 100% ${50 - tanClip * 50}%, 100% ${50 + tanClip * 50}%, 0% 100%)`;
+        setorDiv.style.borderRight = '1px solid black'; // Borda que separa
+
+        // 2. Cria a DIV para o nome e a anexa ao setor
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
-        // Fórmula para o tamanho da fonte (Ajustada para o tamanho 1000px)
         nomeDiv.style.fontSize = `${Math.max(0.5, 1.2 - (numSetores / 100) * 0.15)}em`; 
         
-        // Posiciona e rotaciona o nome
-        const angulo = i * anguloPorSetor;
-        // Ajuste para o meio da fatia
-        const anguloTexto = angulo + (anguloPorSetor / 2);
+        // Posiciona o nome dentro da fatia, um pouco para dentro da borda externa
+        const distanciaNome = raioRoleta * 0.7; // 70% do raio para o nome
+        // A rotação do nome é em relação ao CENTRO da roleta (pai do setor)
+        const anguloTextoNoCentro = anguloBase + (anguloPorSetor / 2);
+
+        // Ajusta a posição para o nome ficar dentro do setor e rotacionado corretamente
+        nomeDiv.style.transform = `rotate(${anguloTextoNoCentro}deg) translate(${distanciaNome}px, 0) rotate(90deg) translateY(-50%)`;
+        nomeDiv.style.position = 'absolute';
+        nomeDiv.style.left = '0';
+        nomeDiv.style.top = '0';
+        nomeDiv.style.textAlign = 'left';
+        nomeDiv.style.transformOrigin = '0 0';
+
+
+        // Para garantir que o texto esteja visualmente dentro da sua "fatia",
+        // podemos adicionar uma pequena margem à largura efetiva do texto.
+        // Isso é mais complicado devido à rotação e não é trivial com `clip-path`.
+        // A abordagem de opacity durante o giro (já implementada) é a melhor para isso.
         
-        // Aplica a rotação do setor e a rotação de 90 graus para deixar o texto na diagonal (seguindo o raio)
-        nomeDiv.style.transform = `rotate(${anguloTexto}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(90deg)`;
-        
-        roletaCirculo.appendChild(nomeDiv);
+        roletaCirculo.appendChild(setorDiv);
+        setorDiv.appendChild(nomeDiv); // O nome é filho do setor agora
     });
     
-    // 4. Adiciona o texto central (informação da geração)
+    // 3. Adiciona o texto central (informação da geração)
     const infoText = document.createElement('p');
     infoText.className = 'roleta-nome-temporario'; 
     infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
@@ -274,7 +306,8 @@ function girarRoleta() {
     }
 
     // 2. Remove os nomes da borda durante o giro para melhor desempenho e menos confusão visual
-    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
+    // (Agora o nome está dentro do setor, então ocultamos os setores inteiros ou apenas o nome)
+    roletaCirculo.querySelectorAll('.setor-roleta-item').forEach(el => el.style.opacity = 0);
 
 
     const tempoGiroTotal = 5000; 
