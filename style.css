@@ -100,3 +100,16 @@ body {
     border: 1px solid #ccc;
     font-size: 1em;
 }
+/* Adicione este bloco (ou ajuste o CSS se necessário) */
+.seletor-geracao {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: #333;
+}
+
+#geracao {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
