@@ -26,6 +26,13 @@
                 <option value="unova">Geração 5 (Unova)</option>
                 <option value="todas">Todas (1 a 5)</option>
             </select>
+            
+            <label for="quantidade">Sortear:</label>
+            <select id="quantidade">
+                <option value="1">1 Pokémon</option>
+                <option value="3">3 Pokémons</option>
+                <option value="6">6 Pokémons</option>
+            </select>
         </div>
 
         <div id="roleta-wrapper">
@@ -35,13 +42,19 @@
         </div>
         
         <button id="btnGirar">GIRAR A ROLETA!</button>
+        <button id="btnResetar" class="hidden">RESETAR</button>
 
-        <div id="pokemon-display" class="pokemon-card">
+        <div id="resultados-detalhados" class="pokemon-cards-container">
+            </div>
+
+        <div id="pokemon-display" class="hidden">
             <img id="pokemon-img" src="" alt="Imagem do Pokémon" class="hidden">
             <h2 id="pokemon-nome"></h2>
         </div>
     </div>
 
+    <audio id="somRoleta" src="roleta_som.mp3" preload="auto"></audio>
+    
     <script src="script.js"></script>
 </body>
 </html>
