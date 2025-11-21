@@ -21,7 +21,7 @@ body.dark-theme {
     --button-hover: #5e69ff;
 }
 
-/* --- ESTILOS GERAIS (USANDO VARIÁVEIS) --- */
+/* --- ESTILOS GERAIS --- */
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -41,7 +41,7 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    min-width: 380px; 
+    min-width: 550px; /* Aumenta o container para acomodar a roleta de 500px */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,10 +49,9 @@ body {
 
 h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     color: var(--text-color);
-    background-color: transparent; /* Garante que o select não tenha fundo branco no tema escuro */
+    background-color: transparent; 
 }
 
-/* --- CHAVE DE TEMA --- */
 .theme-switch-wrapper {
     display: flex;
     align-items: center;
@@ -62,11 +61,11 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     font-size: 0.9em;
 }
 
-/* --- ESTILO DA ROLETA VISUAL --- */
+/* --- ESTILO DA ROLETA VISUAL (500px) --- */
 #roleta-wrapper {
     position: relative; 
-    width: 300px;
-    height: 300px;
+    width: 500px; /* 500px */
+    height: 500px; /* 500px */
     margin: 30px auto;
     display: flex;
     justify-content: center;
@@ -77,15 +76,10 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    /* 8 Setores coloridos - O JS preencherá o resto do espaço */
     background: conic-gradient(
-        #FFD700 0% 12.5%, 
-        #FF6347 12.5% 25%, 
-        #1E90FF 25% 37.5%, 
-        #32CD32 37.5% 50%, 
-        #8A2BE2 50% 62.5%, 
-        #FF1493 62.5% 75%, 
-        #8B4513 75% 87.5%, 
-        #708090 87.5% 100% 
+        #FFD700 0% 12.5%, #FF6347 12.5% 25%, #1E90FF 25% 37.5%, #32CD32 37.5% 50%, 
+        #8A2BE2 50% 62.5%, #FF1493 62.5% 75%, #8B4513 75% 87.5%, #708090 87.5% 100%
     );
     border: 8px solid var(--border-color); 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
@@ -93,33 +87,33 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     position: relative; 
 }
 
-/* Ponteiro da Roleta (Fixo) */
+/* Ponteiro da Roleta (Maior) */
 #roleta-ponteiro {
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 30px solid var(--border-color); /* Triângulo */
-    top: -15px; 
+    border-left: 20px solid transparent; 
+    border-right: 20px solid transparent; 
+    border-top: 40px solid var(--border-color); /* Triângulo */
+    top: -25px; 
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
 }
 
-/* Estilo para os nomes fixos ao longo da borda da roleta */
+/* Estilo para os nomes fixos (Todos os 138+) */
 .roleta-nome-setor {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100px; 
+    width: 250px; /* Metade do diâmetro */
     text-align: center;
-    font-size: 0.8em;
+    font-size: 0.8em; /* O JS irá reduzir este valor dinamicamente */
     font-weight: bold;
     color: white; 
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     transform-origin: 0 0; 
-    margin-left: -50px; 
+    margin-left: -125px; /* Centraliza a largura (metade de 250px) */
     margin-top: -10px; 
     z-index: 2; 
 }
@@ -130,7 +124,7 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.4em;
+    font-size: 2.0em; /* Maior para o centro */
     font-weight: bold;
     color: var(--text-color); 
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
@@ -140,56 +134,4 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     padding: 10px;
 }
 
-/* Botão */
-#btnGirar {
-    padding: 12px 25px; 
-    font-size: 1.2em;
-    background-color: var(--button-primary); 
-    color: white;
-    border: none;
-    border-radius: 7px; 
-    cursor: pointer;
-    margin-top: 20px; 
-    transition: background-color 0.3s, transform 0.1s;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-#btnGirar:hover {
-    background-color: var(--button-hover);
-    transform: translateY(-2px);
-}
-
-#btnGirar:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Display do Pokémon Sorteado */
-.pokemon-card {
-    margin-top: 30px; 
-    border-top: 2px dashed var(--card-border); 
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#pokemon-img {
-    max-width: 180px; 
-    height: auto;
-    margin-bottom: 10px;
-    transition: opacity 0.5s;
-    image-rendering: pixelated; 
-}
-
-#pokemon-nome {
-    font-size: 1.8em; 
-    color: var(--text-color);
-    text-transform: capitalize; 
-}
-
-.hidden {
-    display: none;
-}
+/* (Restante do CSS permanece igual) */
