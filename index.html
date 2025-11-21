@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta Pokémon - Geração 1 & 2</title>
+    <title>Roleta Pokémon - Geração 1 a 5</title>
     <link rel="stylesheet" href="estilo.css"> 
 </head>
 <body>
 
     <div class="container">
-        <h1>Roleta Pokémon - Geração 1 & 2 (Kanto & Johto)</h1>
+        <h1>Roleta Pokémon - Geração 1 a 5</h1>
         
         <div class="seletor-geracao">
             <label for="geracao">Escolher Geração:</label>
             <select id="geracao">
                 <option value="kanto">Geração 1 (Kanto)</option>
                 <option value="johto">Geração 2 (Johto)</option>
-                <option value="todas">Todas (1 e 2)</option>
+                <option value="hoenn">Geração 3 (Hoenn)</option>
+                <option value="sinnoh">Geração 4 (Sinnoh)</option>
+                <option value="unova">Geração 5 (Unova)</option>
+                <option value="todas">Todas (1 a 5)</option>
             </select>
         </div>
 
         <div id="roleta-wrapper">
             <div id="roleta-ponteiro"></div> 
+            
             <div id="roleta-circulo">
                 </div>
         </div>
@@ -37,4 +41,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-<link rel="stylesheet" href="estilo.css">
