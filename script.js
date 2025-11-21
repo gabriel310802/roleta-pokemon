@@ -89,3 +89,36 @@ async function exibirResultado(nome) {
 
 // Adiciona o evento de clique ao botão
 btnGirar.addEventListener('click', girarRoleta);
+// --- FUNÇÃO PARA ATUALIZAR O DISPLAY COM A GERAÇÃO ATUAL ---
+function atualizarDisplayGeracao() {
+    const geracaoSelecionada = seletorGeracao.value;
+    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
+
+    let nomeGeracao = '';
+    
+    switch (geracaoSelecionada) {
+        case 'kanto':
+            nomeGeracao = 'Geração 1 (Kanto)';
+            break;
+        case 'johto':
+            nomeGeracao = 'Geração 2 (Johto)';
+            break;
+        case 'todas':
+            nomeGeracao = 'Gerações 1 e 2 (Todas)';
+            break;
+    }
+
+    resultadoDiv.innerHTML = `<p>${nomeGeracao}</p><p>(${listaAtual.length} Pokémon)</p>`;
+    pokemonNomeH2.textContent = ''; // Limpa o nome do Pokémon anterior
+    pokemonImg.classList.add('hidden'); // Esconde a imagem
+}
+
+// --- LISTENERS DE EVENTOS ---
+// 1. Adiciona o evento de clique ao botão (Seu código original)
+btnGirar.addEventListener('click', girarRoleta);
+
+// 2. ADICIONA O EVENTO 'CHANGE' AO SELETOR DE GERAÇÃO
+seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
+
+// 3. CHAMA A FUNÇÃO AO INICIAR para mostrar a geração padrão (Kanto)
+atualizarDisplayGeracao();
