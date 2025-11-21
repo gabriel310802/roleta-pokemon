@@ -7,6 +7,7 @@ body {
     margin: 0;
     background-color: #f0f0f0;
     text-align: center;
+    overflow: hidden; 
 }
 
 .container {
@@ -14,7 +15,15 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    min-width: 350px; /* Garante que os elementos não fiquem muito apertados */
+    min-width: 380px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
 }
 
 /* Estilo do Seletor de Geração */
@@ -29,81 +38,119 @@ body {
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1em;
+    cursor: pointer;
 }
 
-/* Estilo da Pokébola/Área de Resultado */
-.pokebola {
-    width: 200px;
-    height: 200px;
-    border: 5px solid #333;
-    border-radius: 50%;
-    margin: 20px auto;
+/* --- ESTILO DA ROLETA VISUAL --- */
+#roleta-wrapper {
+    position: relative; 
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
     display: flex;
-    flex-direction: column; 
     justify-content: center;
     align-items: center;
-    font-size: 1.2em;
+}
+
+#roleta-circulo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* 8 Setores coloridos como na imagem */
+    background: conic-gradient(
+        #FFD700 0% 12.5%, 
+        #FF6347 12.5% 25%, 
+        #1E90FF 25% 37.5%, 
+        #32CD32 37.5% 50%, 
+        #8A2BE2 50% 62.5%, 
+        #FF1493 62.5% 75%, 
+        #8B4513 75% 87.5%, 
+        #708090 87.5% 100% 
+    );
+    border: 8px solid #333; 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    transition: transform 5s ease-out; /* Transição para o giro suave */
+    position: relative; 
+}
+
+/* Ponteiro da Roleta (Fixo) */
+#roleta-ponteiro {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #333; /* Triângulo preto */
+    top: -15px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+/* Estilo para os nomes dos Pokémons no centro da roleta */
+.roleta-nome-temporario {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.4em;
     font-weight: bold;
-    color: #333;
-    /* Cores da Pokebola */
-    background: 
-        linear-gradient(to bottom, 
-            #ff0000 0%, #ff0000 49.5%, 
-            #333 49.5%, #333 50.5%, 
-            white 50.5%, white 100%
-        );
-    transition: transform 0.5s ease-out;
-    overflow: hidden; /* Importante para que o texto não vaze, se necessário */
-}
-
-.pokebola p {
-    margin: 2px 0; /* Ajuste o espaçamento interno do texto */
-    padding: 0;
-}
-
-/* Animação de Giro (Classe adicionada no JavaScript) */
-.girando {
-    animation: spin-and-shake 0.5s infinite alternate;
-}
-
-@keyframes spin-and-shake {
-    0% { transform: rotate(0deg) scale(1); }
-    100% { transform: rotate(10deg) scale(1.05); }
+    color: #333; 
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+    text-align: center;
+    z-index: 5;
+    line-height: 1.2;
+    padding: 10px;
 }
 
 /* Botão */
 #btnGirar {
-    padding: 10px 20px;
-    font-size: 1.1em;
-    background-color: #3b4cca; /* Azul Pokémon */
+    padding: 12px 25px; 
+    font-size: 1.2em;
+    background-color: #3b4cca; 
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 7px; 
     cursor: pointer;
-    margin-bottom: 20px;
-    transition: background-color 0.3s;
+    margin-top: 20px; 
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 #btnGirar:hover {
     background-color: #0033a0;
+    transform: translateY(-2px);
 }
 
 #btnGirar:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Display do Pokémon Sorteado */
 .pokemon-card {
-    margin-top: 20px;
+    margin-top: 30px; 
     border-top: 2px dashed #ccc;
     padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #pokemon-img {
-    max-width: 150px;
+    max-width: 180px; 
     height: auto;
+    margin-bottom: 10px;
     transition: opacity 0.5s;
+    image-rendering: pixelated; 
+}
+
+#pokemon-nome {
+    font-size: 1.8em; 
+    color: #333;
+    text-transform: capitalize; 
 }
 
 .hidden {
