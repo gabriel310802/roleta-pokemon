@@ -1,6 +1,7 @@
 // --- LISTAS DE POKÉMONS (GERAÇÕES 1 a 5) ---
 
 const kantoPokemon = [
+    // 151 Pokémons da Geração 1
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -144,7 +145,7 @@ const themeToggle = document.getElementById('darkModeToggle');
 let currentRotation = 0; 
 
 
-// --- FUNÇÕES DE LÓGICA DE GERAÇÃO ---
+// --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
 
 function getNomeGeracao(chave) {
     switch (chave) {
@@ -158,15 +159,16 @@ function getNomeGeracao(chave) {
     }
 }
 
-// Função para preencher a roleta com 8 nomes (ilude a roleta preenchida)
+// CORREÇÃO AQUI: Garante que os 8 primeiros nomes da lista atual sejam exibidos.
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo
 
     const nomesVisiveis = 8;
     const anguloPorNome = 360 / nomesVisiveis;
 
-    // Adiciona 8 nomes da lista (ou repete se a lista for menor que 8)
+    // Adiciona 8 nomes da lista (usando módulo para garantir que sempre haja um nome)
     for (let i = 0; i < nomesVisiveis; i++) {
+        // Usa o índice 'i' da lista ATUAL (corrigindo o bug do filtro solo)
         const nome = lista[i % lista.length]; 
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
@@ -187,7 +189,6 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
 }
 
 
-// Função para atualizar o display da roleta (antes de girar)
 function atualizarDisplayGeracao() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
@@ -297,18 +298,14 @@ async function exibirResultado(nome) {
 
 // --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
 
-// Função para aplicar/remover a classe dark-theme
 function toggleTheme() {
     const isDark = themeToggle.checked;
     
-    // Aplica a classe no body
     document.body.classList.toggle('dark-theme', isDark);
 
-    // Salva a preferência no armazenamento local
     localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
 }
 
-// Carrega o tema salvo ao iniciar a página
 function loadTheme() {
     const savedTheme = localStorage.getItem('darkMode');
 
