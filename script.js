@@ -1,6 +1,5 @@
-// --- LISTAS DE POKÉMONS (GERAÇÕES 1 a 5) ---
+// --- LISTAS DE POKÉMONS E FILTROS ---
 
-// Listas originais de cada Geração (usamos o array completo e filtramos depois)
 const kantoPokemon = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
@@ -124,15 +123,6 @@ const unovaPokemon = [
     "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
 ];
 
-// --- LISTAS DE POKÉMONS E FILTROS (MANTIDAS) ---
-
-// (Todas as listas de kantoPokemon até unovaPokemon permanecem aqui)
-const kantoPokemon = [ /* ... 151 nomes ... */ ];
-const johtoPokemon = [ /* ... 100 nomes ... */ ];
-const hoennPokemon = [ /* ... 135 nomes ... */ ];
-const sinnohPokemon = [ /* ... 107 nomes ... */ ];
-const unovaPokemon = [ /* ... 156 nomes ... */ ];
-
 // Lista de Pokémons a Serem Excluídos (Iniciais, Lendários, Míticos)
 const POKEMON_PARA_EXCLUIR = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew",
@@ -173,7 +163,7 @@ const seletorGeracao = document.getElementById('geracao');
 const themeToggle = document.getElementById('darkModeToggle');
 
 let currentRotation = 0; 
-const DISTANCIA_DA_BORDA = 220; // NOVO: 500px / 2 (raio) - 30px (margem) = 220px
+const DISTANCIA_DA_BORDA = 220; // 500px / 2 (raio) - 30px (margem) = 220px
 
 
 // --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
@@ -190,21 +180,20 @@ function getNomeGeracao(chave) {
     }
 }
 
-// CORREÇÃO: Garante que os 8 primeiros nomes da lista atual sejam exibidos.
+// NOVO: preencherRoletaComNomes agora sempre exibe TODOS os nomes na borda
 function preencherRoletaComNomes(lista, nomeGeracao) {
-    roletaCirculo.innerHTML = ''; // Limpa o círculo
+    roletaCirculo.innerHTML = ''; // Limpa o círculo para adicionar nomes na borda e o texto central
 
-    const numSetores = lista.length; // NOVO: Número de setores = número de Pokémons
+    const numSetores = lista.length; // Número de setores é igual ao número de Pokémons na lista
     const anguloPorNome = 360 / numSetores;
     
-    // Adiciona TODOS os nomes da lista
+    // Adiciona TODOS os nomes da lista na borda
     lista.forEach((nome, i) => {
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
         // Fórmula para o tamanho da fonte: Reduz baseado no número de itens
-        // É aqui que a legibilidade será perdida em grandes gerações (138+)
         nomeDiv.style.fontSize = `${Math.max(0.2, 0.8 - (numSetores / 100) * 0.15)}em`; 
         
         // Posiciona e rotaciona o nome
@@ -214,9 +203,9 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
         roletaCirculo.appendChild(nomeDiv);
     });
     
-    // Adiciona o texto central (total de Pokémons)
+    // Adiciona o texto central (informação da geração)
     const infoText = document.createElement('p');
-    infoText.className = 'roleta-nome-temporario';
+    infoText.className = 'roleta-nome-temporario'; // Reutilizamos a classe para o texto central grande
     infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
     roletaCirculo.appendChild(infoText);
 }
@@ -252,7 +241,12 @@ function girarRoleta() {
     }
 
     btnGirar.disabled = true;
-    roletaCirculo.innerHTML = ''; // Limpa antes do scroll
+    
+    // Limpa APENAS o texto central para o giro
+    const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (centroTextElement) {
+        centroTextElement.textContent = ''; 
+    }
 
     const tempoGiroTotal = 5000; 
     const numVoltas = 5; 
@@ -278,7 +272,7 @@ function girarRoleta() {
     roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
 
     
-    // --- LÓGICA DO NOME EM SCROLL CENTRAL ---
+    // --- LÓGICA DO NOME EM SCROLL CENTRAL (DURANTE O GIRO) ---
     let scrollInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * listaAtual.length);
         const randomPokemonName = listaAtual[randomIndex];
