@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roleta Pokémon - Kanto</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Roleta Pokémon - Geração 1 & 2</title>
+    <link rel="stylesheet" href="estilo.css"> 
 </head>
 <body>
 
     <div class="container">
-        <h1>Roleta Pokémon - Geração 1 (Kanto)</h1>
+        <h1>Roleta Pokémon - Geração 1 & 2 (Kanto & Johto)</h1>
         
-        <div id="resultado" class="pokebola">
-            <p>Clique para Girar</p>
+        <div class="seletor-geracao">
+            <label for="geracao">Escolher Geração:</label>
+            <select id="geracao">
+                <option value="kanto">Geração 1 (Kanto)</option>
+                <option value="johto">Geração 2 (Johto)</option>
+                <option value="todas">Todas (1 e 2)</option>
+            </select>
         </div>
+
+        <div id="resultado" class="pokebola">
+            </div>
 
         <button id="btnGirar">GIRAR A ROLETA!</button>
 
@@ -26,21 +34,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-<div class="container">
-    <h1>Roleta Pokémon - Geração 1 & 2</h1>
-
-    <div class="seletor-geracao">
-        <label for="geracao">Escolher Geração:</label>
-        <select id="geracao">
-            <option value="kanto">Geração 1 (Kanto)</option>
-            <option value="johto">Geração 2 (Johto)</option>
-            <option value="todas">Todas (1 e 2)</option>
-        </select>
-    </div>
-    <div id="resultado" class="pokebola">
-        <p>Clique para Girar</p>
-    </div>
-
-    <button id="btnGirar">GIRAR A ROLETA!</button>
-
-    </div>
