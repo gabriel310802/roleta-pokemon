@@ -1,4 +1,4 @@
-// --- LISTAS DE POKÉMONS E FILTROS (Permanece tudo igual) ---
+// --- LISTAS DE POKÉMONS E FILTROS (Permanecem IGUAIS) ---
 
 const kantoPokemon = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
@@ -168,7 +168,7 @@ const themeToggle = document.getElementById('darkModeToggle');
 const somRoleta = document.getElementById('somRoleta'); 
 
 let currentRotation = 0; 
-const DISTANCIA_DA_BORDA = 470; 
+const DISTANCIA_DA_BORDA = 470; // Distância para 1000px de diâmetro. (1000/2) - 30 = 470px
 
 // Cores para os setores da roleta (repetidas)
 const CORES_SETORES = [
@@ -204,7 +204,6 @@ async function fetchStats(pokemonId) {
             hp: data.stats[0].base_stat,
             attack: data.stats[1].base_stat,
             defense: data.stats[2].base_stat,
-            // O máximo é 255 para base stat em Pokémon
             maxStat: 255
         };
         return stats;
@@ -266,7 +265,7 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
         gradientColors.push(`black ${anguloInicio}deg, ${cor} ${parseFloat(anguloInicio) + 0.01}deg ${anguloFim}deg`);
     }
 
-    // 2. Aplica o conic-gradient no background 
+    // 2. Aplica o conic-gradient no background (cria as 137+ fatias visuais com separação preta)
     roletaCirculo.style.background = `conic-gradient(${gradientColors.join(', ')})`;
     
     // 3. Posiciona TODOS os nomes na borda
@@ -281,6 +280,7 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
         
         // Posiciona e rotaciona o nome
         const angulo = i * anguloPorSetor;
+        // Ajuste para o meio da fatia
         const anguloTexto = angulo + (anguloPorSetor / 2);
         
         // Aplica a rotação do setor e a rotação de 90 graus para deixar o texto na diagonal (seguindo o raio)
@@ -294,6 +294,119 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
     infoText.className = 'roleta-nome-temporario'; 
     infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
     roletaCirculo.appendChild(infoText);
+}
+
+
+function atualizarDisplayGeracao() {
+    const geracaoSelecionada = seletorGeracao.value;
+    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
+    const nomeGeracao = getNomeGeracao(geracaoSelecionada);
+
+    preencherRoletaComNomes(listaAtual, nomeGeracao);
+
+    // Limpa o resultado anterior
+    pokemonNomeH2.textContent = ''; 
+    pokemonImg.classList.add('hidden'); 
+
+    // Reseta a rotação da roleta visual 
+    roletaCirculo.style.transition = 'none'; 
+    roletaCirculo.style.transform = `rotate(0deg)`;
+    setTimeout(() => {
+        roletaCirculo.style.transition = 'transform 5s ease-out'; 
+    }, 50);
+    currentRotation = 0;
+}
+
+// FUNÇÃO DE RESET
+function resetRoleta() {
+    resultadosContainer.innerHTML = '';
+    resultadosContainer.classList.add('hidden');
+    btnResetar.classList.add('hidden');
+
+    // Reseta a rotação visual da roleta (para 0 deg)
+    roletaCirculo.style.transition = 'none';
+    roletaCirculo.style.transform = 'rotate(0deg)';
+    currentRotation = 0;
+    
+    // Reativa o display inicial da geração
+    atualizarDisplayGeracao();
+}
+
+// Função principal para girar a roleta visual e sortear
+function girarRoleta() {
+    const geracaoSelecionada = seletorGeracao.value;
+    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
+    const quantidade = parseInt(quantidadeSelect.value); // Pega a quantidade a ser sorteada
+
+    if (!listaAtual || listaAtual.length === 0) {
+        return;
+    }
+
+    btnGirar.disabled = true;
+    btnResetar.classList.add('hidden');
+    
+    // 1. Inicia o som da roleta
+    somRoleta.currentTime = 0; 
+    somRoleta.play();
+
+    // 2. Exibe o "GIRANDO..." no centro
+    const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (centroTextElement) {
+        centroTextElement.textContent = 'GIRANDO...'; 
+        centroTextElement.style.color = 'var(--button-primary)';
+    }
+    // Remove os nomes da borda durante o giro (agora eles ficam visíveis para a animação)
+    // roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
+
+    resultadosContainer.innerHTML = ''; // Limpa resultados anteriores
+    resultadosContainer.classList.add('hidden');
+
+    const tempoGiroTotal = 5000; 
+    const numVoltas = 5; 
+    
+    // --- Lógica de Sorteio Múltiplo ---
+    const resultadosSorteados = [];
+    const numSetores = listaAtual.length; 
+    const anguloPorSetor = 360 / numSetores; 
+    
+    // Sorteamos o ÚLTIMO Pokémon para determinar onde a roleta irá parar visualmente
+    const ultimoIndiceSorteado = Math.floor(Math.random() * listaAtual.length);
+    
+    for (let i = 0; i < quantidade; i++) {
+        // Garantimos que o último Pokémon sorteado é o que define a parada visual
+        const indice = (i === quantidade - 1) ? ultimoIndiceSorteado : Math.floor(Math.random() * listaAtual.length);
+        resultadosSorteados.push({ nome: listaAtual[indice], indice: indice });
+    }
+
+    // --- CÁLCULO DA PARADA VISUAL (Baseado no último Pokémon) ---
+    const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
+    const anguloAjustado = 360 - anguloParada; 
+
+    const giroFinal = (numVoltas * 360) + anguloAjustado; 
+    currentRotation += giroFinal; 
+
+    // Define a rotação e a transição
+    roletaCirculo.style.transform = `rotate(${currentRotation}deg)`;
+    roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
+
+    
+    setTimeout(() => {
+        // 1. Para o som
+        somRoleta.pause();
+        
+        // 2. Exibe o resultado detalhado com stats
+        exibirResultado(resultadosSorteados);
+
+        // 3. Reabilita o botão
+        btnGirar.disabled = false;
+
+        // 4. Restaura os nomes da borda (após um pequeno delay para garantir a parada)
+        setTimeout(() => {
+             preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
+        }, 100);
+
+
+    }, tempoGiroTotal);
 }
 
 
@@ -333,116 +446,35 @@ function exibirResultado(resultados) {
 }
 
 
-// FUNÇÃO DE RESET
-function resetRoleta() {
-    resultadosContainer.innerHTML = '';
-    resultadosContainer.classList.add('hidden');
-    btnResetar.classList.add('hidden');
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO E LISTENERS ---
 
-    // Reseta a rotação visual da roleta (para 0 deg)
-    roletaCirculo.style.transition = 'none';
-    roletaCirculo.style.transform = 'rotate(0deg)';
-    currentRotation = 0;
+function toggleTheme() {
+    const isDark = themeToggle.checked;
     
-    // Reativa o display inicial da geração
-    atualizarDisplayGeracao();
-}
+    document.body.classList.toggle('dark-theme', isDark);
 
-
-// Função principal para girar a roleta visual e sortear
-function girarRoleta() {
-    const geracaoSelecionada = seletorGeracao.value;
-    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    const quantidade = parseInt(quantidadeSelect.value); // Pega a quantidade a ser sorteada
-
-    if (!listaAtual || listaAtual.length === 0) {
-        return;
-    }
-
-    btnGirar.disabled = true;
-    btnResetar.classList.add('hidden');
-    
-    // 1. Inicia o som da roleta
-    somRoleta.currentTime = 0; 
-    somRoleta.play();
-
-    // 2. Exibe o "GIRANDO..." no centro
-    const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
-    if (centroTextElement) {
-        centroTextElement.textContent = 'GIRANDO...'; 
-        centroTextElement.style.color = 'var(--button-primary)';
-    }
-    // Remove os nomes da borda durante o giro
-    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
-
-    const tempoGiroTotal = 5000; 
-    const numVoltas = 5; 
-    
-    // --- Lógica de Sorteio Múltiplo ---
-    const resultadosSorteados = [];
-    const numSetores = listaAtual.length; 
-    const anguloPorSetor = 360 / numSetores; 
-    
-    // Sorteamos o ÚLTIMO Pokémon para determinar onde a roleta irá parar visualmente
-    const ultimoIndiceSorteado = Math.floor(Math.random() * listaAtual.length);
-    
-    for (let i = 0; i < quantidade; i++) {
-        // Garantimos que o último Pokémon sorteado é o que define a parada visual
-        const indice = (i === quantidade - 1) ? ultimoIndiceSorteado : Math.floor(Math.random() * listaAtual.length);
-        resultadosSorteados.push({ nome: listaAtual[indice], indice: indice });
-    }
-
-    // --- CÁLCULO DA PARADA VISUAL (Baseado no último Pokémon) ---
-    const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
-    const anguloAjustado = 360 - anguloParada;
-
-    const giroFinal = (numVoltas * 360) + anguloAjustado; 
-    currentRotation += giroFinal; 
-
-    // Define a rotação e a transição
-    roletaCirculo.style.transform = `rotate(${currentRotation}deg)`;
-    roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
-
-    
-    setTimeout(() => {
-        // 1. Para o som
-        somRoleta.pause();
-        
-        // 2. Exibe o resultado detalhado com stats
-        exibirResultado(resultadosSorteados);
-
-        // 3. Reabilita o botão
-        btnGirar.disabled = false;
-
-        // 4. Restaura os nomes da borda
-        setTimeout(() => {
-             preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
-        }, 100);
-
-
-    }, tempoGiroTotal);
-}
-
-
-// --- LÓGICA DE TEMA ESCURO E LISTENERS ---
-
-function atualizarDisplayGeracao() {
-    // ... (restante da função) ...
+    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
 }
 
 function loadTheme() {
-    // ... (restante da função) ...
+    const savedTheme = localStorage.getItem('darkMode');
+
+    if (savedTheme === 'enabled') {
+        themeToggle.checked = true;
+        document.body.classList.add('dark-theme');
+    } else {
+        themeToggle.checked = false;
+        document.body.classList.remove('dark-theme');
+    }
 }
 
-function toggleTheme() {
-    // ... (restante da função) ...
-}
 
-// Inicialização da página e Listeners
+// --- LISTENERS DE EVENTOS ---
 btnGirar.addEventListener('click', girarRoleta);
 btnResetar.addEventListener('click', resetRoleta);
 seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
 themeToggle.addEventListener('change', toggleTheme);
 
+// Inicialização da página
 loadTheme();
 atualizarDisplayGeracao();
