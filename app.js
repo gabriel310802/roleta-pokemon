@@ -405,7 +405,7 @@ function girarRoleta() {
         // 3. Reabilita o botão
         btnGirar.disabled = false;
 
-        // 4. Restaura os nomes da borda (após um pequeno delay para garantir a parada)
+        // 4. Restaura os nomes da borda
         setTimeout(() => {
              preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
         }, 100);
