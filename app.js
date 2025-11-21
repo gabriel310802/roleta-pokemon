@@ -156,15 +156,15 @@ const pokemonPorGeracao = {
 };
 
 
-// LINHA 159: // -- REFERÊNCIAS DO DOM --
-const btnGirar = document.getElementById('btnGirar'); // CORRIGIDO: de btngirar para btnGirar
+// --- REFERÊNCIAS DO DOM ---
+const btnGirar = document.getElementById('btnGirar');
 const btnResetar = document.getElementById('btnResetar');
 const roletaCirculo = document.getElementById('roleta-circulo');
 const resultadosContainer = document.getElementById('resultados-detalhados');
 const quantidadeSelect = document.getElementById('quantidade');
 const seletorGeracao = document.getElementById('geracao');
-const themeToggle = document.getElementById('darkModeToggle'); // CORRIGIDO: Referencia o checkbox
-const somRoleta = document.getElementById('somRoleta');
+const themeToggle = document.getElementById('darkModeToggle');
+const somRoleta = document.getElementById('somRoleta'); 
 
 let currentRotation = 0; 
 const DISTANCIA_DA_BORDA = 470; // 1000px / 2 (raio) - 30px (margem) = 470px
@@ -312,13 +312,9 @@ function atualizarDisplayGeracao() {
 
     preencherRoletaComNomes(listaAtual, nomeGeracao);
 
-    // Limpa o resultado anterior
-    pokemonNomeH2.textContent = ''; 
     // Garante que o botão de resetar esteja escondido
     btnResetar.classList.add('hidden');
     resultadosContainer.classList.add('hidden');
-
-    // Reabilita o botão Girar
     btnGirar.disabled = false;
 }
 
@@ -332,7 +328,6 @@ function resetarRoleta() {
     roletaCirculo.style.transform = 'rotate(0deg)';
     currentRotation = 0;
     
-    // Reativa o display inicial da geração
     atualizarDisplayGeracao();
 }
 
@@ -359,7 +354,7 @@ function girarRoleta() {
         centroTextElement.textContent = 'GIRANDO...'; 
         centroTextElement.style.color = 'var(--button-primary)';
     }
-    // Remove os nomes da borda durante o giro (ficam ocultos para melhor desempenho visual)
+    // Remove os nomes da borda durante o giro (agora eles ficam visíveis para a animação)
     roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
 
     resultadosContainer.innerHTML = ''; 
@@ -383,7 +378,7 @@ function girarRoleta() {
 
     // --- 4. CÁLCULO DA PARADA VISUAL ---
     const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
-    const anguloAjustado = 360 - anguloParada; 
+    const anguloAjustado = 360 - anguloParada; // Corrigido para apontar corretamente para o topo
 
     const giroFinal = (numVoltas * 360) + anguloAjustado; 
     currentRotation += giroFinal; 
@@ -418,7 +413,43 @@ function girarRoleta() {
 }
 
 
-// --- LÓGICA DE TEMA ESCURO E LISTENERS ---
+function exibirResultado(resultados) {
+    resultadosContainer.innerHTML = ''; // Limpa resultados anteriores
+    resultadosContainer.classList.remove('hidden');
+    btnResetar.classList.remove('hidden'); // Exibe o botão de reset
+
+    resultados.forEach(async (resultado) => {
+        const listaCompletaOriginal = kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon); 
+        const idPokemon = listaCompletaOriginal.findIndex(name => name.toLowerCase() === resultado.nome) + 1; 
+
+        if (idPokemon === 0) {
+             console.error(`ID não encontrado para ${resultado.nome}`);
+             return;
+        }
+
+        // 1. Busca as estatísticas
+        const stats = await fetchStats(resultado.nome); // Usamos o nome normalizado para a API
+
+        // 2. Cria e anexa o card
+        if (stats) {
+            const card = criarPokemonCard(resultado.nome, idPokemon, stats);
+            resultadosContainer.appendChild(card);
+        }
+    });
+
+    // Atualiza o texto central para o nome do primeiro Pokémon sorteado ou apenas "Resultado"
+    const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (centroTextElement) {
+        centroTextElement.textContent = resultados.length > 1 
+            ? `${resultados.length} Pokémons Sorteados!`
+            : formatarNome(resultados[0].nome);
+        centroTextElement.style.color = 'var(--text-color)';
+    }
+
+}
+
+
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
 
 function toggleTheme() {
     const isDark = themeToggle.checked;
@@ -435,7 +466,7 @@ function loadTheme() {
         themeToggle.checked = true;
         document.body.classList.add('dark-theme');
     } else {
-        themeToggle.checked = false;
+        toggleTheme.checked = false;
         document.body.classList.remove('dark-theme');
     }
 }
@@ -445,7 +476,7 @@ function loadTheme() {
 btnGirar.addEventListener('click', girarRoleta);
 btnResetar.addEventListener('click', resetarRoleta);
 seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
-themeToggle.addEventListener('change', toggleTheme);
+darkModeToggle.addEventListener('change', toggleTheme);
 
 // Inicialização da página
 loadTheme();
