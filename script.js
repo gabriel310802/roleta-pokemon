@@ -187,54 +187,64 @@ function getNomeGeracao(chave) {
     }
 }
 
-// NOVO: preencherRoletaComNomes - Gera o conic-gradient e os nomes na borda
+// --- FUNÇÃO CORRIGIDA PARA DESENHO DE SETORES E BORDAS ---
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo 
 
     const numSetores = lista.length; 
     const anguloPorSetor = 360 / numSetores;
-    
-    let gradientColors = [];
-    
-    // 1. Gera a string de cores do conic-gradient para as 137+ fatias
-    for (let i = 0; i < numSetores; i++) {
-        const cor = CORES_SETORES[i % CORES_SETORES.length];
-        const anguloFim = ((i + 1) * anguloPorSetor).toFixed(2);
-        const anguloInicio = (i * anguloPorSetor).toFixed(2);
-        gradientColors.push(`${cor} ${anguloInicio}deg ${anguloFim}deg`);
-    }
+    const raioRoleta = roletaCirculo.offsetWidth / 2; // Raio (500px)
+    const DISTANCIA_TEXTO = 470; // Distância de posicionamento do nome
 
-    // 2. Aplica o conic-gradient no background (cria as 137+ fatias visuais)
-    roletaCirculo.style.background = `conic-gradient(${gradientColors.join(', ')})`;
+    // 1. Remove o conic-gradient (para que o background venha dos setores individuais)
+    roletaCirculo.style.background = 'transparent';
+
     
-    // 3. Posiciona TODOS os nomes na borda
     lista.forEach((nome, i) => {
+        const cor = CORES_SETORES[i % CORES_SETORES.length];
+        
+        // 1. Cria a DIV para o setor (a fatia colorida)
+        const setorDiv = document.createElement('div');
+        setorDiv.className = 'setor-roleta-item'; 
+        setorDiv.style.backgroundColor = cor; 
+
+        // 2. Calcula as dimensões e rotação da fatia
+        setorDiv.style.width = `${raioRoleta}px`;
+        // Para uma fatia fina, a altura deve ser o raio (ou ligeiramente mais)
+        setorDiv.style.height = `${raioRoleta}px`; 
+        
+        // Aplica a rotação da fatia
+        const anguloBase = i * anguloPorSetor;
+        // Transform: gira a fatia e aplica o clip-path para torná-la um triângulo
+        setorDiv.style.transform = `rotate(${anguloBase}deg) skewY(${90 - anguloPorSetor}deg)`;
+        setorDiv.style.transformOrigin = '0% 0%'; // Rotação a partir do centro
+
+        
+        // 3. Cria a DIV para o nome e a anexa ao setor
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
-        // Fórmula para o tamanho da fonte (Ajustada para o tamanho 1000px)
+        // Ajuste de fonte (Permanece igual)
         nomeDiv.style.fontSize = `${Math.max(0.5, 1.2 - (numSetores / 100) * 0.15)}em`; 
         
-        // Posiciona e rotaciona o nome
-        const angulo = i * anguloPorSetor;
-        // Ajuste para o meio da fatia
-        const anguloTexto = angulo + (anguloPorSetor / 2);
+        // Posicionamento do nome dentro da fatia (em diagonal)
+        const anguloTexto = anguloBase + (anguloPorSetor / 2); // Meio do setor
         
-        // Aplica a rotação do setor e a rotação de 90 graus para deixar o texto na diagonal (seguindo o raio)
-        nomeDiv.style.transform = `rotate(${anguloTexto}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(90deg)`;
+        // Rotaciona o nome junto com o setor e o alinha à borda
+        // O translate no Y (segundo valor) é a distância a partir do centro
+        nomeDiv.style.transform = `rotate(${anguloTexto}deg) translate(0px, -${DISTANCIA_TEXTO}px) rotate(90deg) translateY(-50%)`;
         
-        roletaCirculo.appendChild(nomeDiv);
+        roletaCirculo.appendChild(setorDiv);
+        roletaCirculo.appendChild(nomeDiv); // O nome permanece filho direto do roletaCirculo
     });
     
-    // 4. Adiciona o texto central (informação da geração)
+    // 4. Adiciona o texto central
     const infoText = document.createElement('p');
     infoText.className = 'roleta-nome-temporario'; 
     infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
     roletaCirculo.appendChild(infoText);
 }
-
-
 function atualizarDisplayGeracao() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
