@@ -49,24 +49,43 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 
 #roleta-circulo {
     width: 100%; height: 100%; border-radius: 50%;
-    /* O JS irá gerar o background conic-gradient com as 137 fatias */
-    background: #000; /* Fundo preto inicial */
+    /* O JS agora irá gerar as fatias triangulares, então o background aqui é apenas a cor de fundo */
+    background: transparent; /* Fundo transparente */
     border: 8px solid var(--border-color); 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     transition: transform 5s ease-out; 
     position: relative; 
 }
 
-/* Ponteiro da Roleta (Maior e Ajustado) */
+/* Ponteiro da Roleta */
 #roleta-ponteiro {
     position: absolute; width: 0; height: 0;
-    border-left: 30px solid transparent; /* Maior */
-    border-right: 30px solid transparent; /* Maior */
-    border-top: 60px solid var(--border-color); /* Maior */
+    border-left: 30px solid transparent; 
+    border-right: 30px solid transparent; 
+    border-top: 60px solid var(--border-color); 
     top: -40px; 
     left: 50%; 
     transform: translateX(-50%); z-index: 10;
 }
+
+/* --- ESTILO PARA AS NOVAS DIVS DE SETOR TRIANGULAR --- */
+.setor-roleta-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* O JS irá calcular width, height, transform e background-color */
+    transform-origin: 0 0; /* Ponto de rotação no centro da roleta */
+    overflow: hidden; 
+    
+    /* Borda que você solicitou: */
+    border: 1px solid black; /* Borda fina para separar as fatias */
+    box-sizing: border-box; 
+    z-index: 1; /* Abaixo do texto central */
+    
+    /* NOVO: Propriedade para cortar o retângulo em uma fatia de pizza */
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%); 
+}
+
 
 /* Estilo para os nomes fixos (Todos os 138+) */
 .roleta-nome-setor {
@@ -87,15 +106,13 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     line-height: 1; 
 }
 
-/* Estilo para o nome ou informação central (grande e claro) */
+/* Estilo para o nome ou informação central */
 .roleta-nome-temporario {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3.0em; /* Maior */
+    font-size: 3.0em; 
     font-weight: bold; color: var(--text-color); 
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
     text-align: center; z-index: 5; line-height: 1.2; padding: 10px;
 }
-
-/* --- NOVO ESTILO: Geometria de Fatias Triangulares --- */
-/* Este estilo é necessário para que a ro
+/* (Restante do CSS permanece inalterado) */
