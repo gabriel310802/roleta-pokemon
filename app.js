@@ -342,7 +342,7 @@ function resetarRoleta() {
 // Função principal para girar a roleta visual e sortear
 function girarRoleta() {
     const geracaoSelecionada = seletorGeracao.value;
-    const listaAtual = pokemonPorCageneroao[geracaoSelecionada]; // ERA 'pokemonPorCageneroao' AGORA É 'pokemonPorGeracao'
+   const listaAtual = pokemonPorGeracao[geracaoSelecionada];
     const quantidade = parseInt(quantidadeSelect.value); 
 
     if (!listaAtual || listaAtual.length === 0) {
