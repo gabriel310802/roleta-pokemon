@@ -97,27 +97,29 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     text-align: center; z-index: 5; line-height: 1.2; padding: 10px;
 }
 
-/* (Restante do CSS permanece inalterado) */
-/* --- NOVO ESTILO PARA CADA SETOR INDIVIDUAL (com borda) --- */
+/* --- NOVO ESTILO: Geometria de Fatias Triangulares (137 setores) --- */
 .setor-roleta-item {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* O JS irá calcular width, height, transform, background-color, border-color */
-    border-right: 1px solid black; /* Borda que separa visualmente cada fatia */
-    box-sizing: border-box; /* Garante que a borda não aumente o tamanho total */
-    transform-origin: 0 0; /* Ponto de rotação no centro da roleta */
-    overflow: hidden; /* Garante que o conteúdo fique dentro do setor */
+    overflow: hidden;
+    transform-origin: 0 0;
+    
+    /* Borda e box-sizing para o visual */
+    border-right: 1px solid black; 
+    box-sizing: border-box; 
+    
+    /* A forma exata da fatia é definida pelo clip-path e o JS */
 }
 
 /* O texto do nome precisa ter seu próprio posicionamento dentro do setor */
 .setor-roleta-item .roleta-nome-setor {
     position: absolute;
-    top: 50%; /* Alinha verticalmente ao centro da altura do setor (triângulo) */
-    left: 0;   /* Começa no início do setor */
-    width: 100%; /* O nome pode ocupar a largura do setor */
+    top: 50%; 
+    left: 0;   
+    width: 100%; 
     text-align: left;
-    transform-origin: 0 0; /* O JS definirá a rotação e translação */
-    padding-left: 10px; /* Um pequeno espaçamento da borda interna do setor */
+    transform-origin: 0 0;
+    padding-left: 10px; 
     box-sizing: border-box;
 }
