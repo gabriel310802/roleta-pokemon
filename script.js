@@ -59,3 +59,49 @@ const pokemonPorGeracao = {
 const btnGirar = document.getElementById('btnGirar');
 const resultadoDiv = document.getElementById('resultado');
 const pokemonNomeH2 = document.
+    // Função principal para girar a roleta com nomes 'ao vivo'
+function girarRoleta() {
+    const geracaoSelecionada = seletorGeracao.value;
+    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
+
+    if (!listaAtual || listaAtual.length === 0) {
+        resultadoDiv.innerHTML = '<p>Erro: Lista de Pokémon Vazia!</p>';
+        return;
+    }
+
+    // Inicia a animação e desabilita o botão
+    btnGirar.disabled = true;
+    resultadoDiv.classList.add('girando');
+    pokemonNomeH2.textContent = '';
+    pokemonImg.classList.add('hidden');
+
+    const tempoGiro = 3000; // 3.0 segundos para o giro total
+    const intervaloScroll = 50; // Atualiza o nome a cada 50 milissegundos
+
+    // --- LÓGICA DO SCROLL DE NOMES ---
+    let scrollInterval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * listaAtual.length);
+        const randomPokemonName = listaAtual[randomIndex];
+        
+        // Exibe o nome aleatório na área da roleta
+        resultadoDiv.innerHTML = `<p>${randomPokemonName}</p>`;
+    }, intervaloScroll);
+    // --- FIM LÓGICA DO SCROLL ---
+
+    setTimeout(() => {
+        // 1. Para o intervalo de scroll e a animação
+        clearInterval(scrollInterval);
+        resultadoDiv.classList.remove('girando');
+        
+        // 2. Seleciona o Pokémon final
+        const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
+        const pokemonSorteado = listaAtual[indiceSorteado];
+        
+        // 3. Exibe o resultado final
+        exibirResultado(pokemonSorteado);
+
+        // 4. Reabilita o botão
+        btnGirar.disabled = false;
+
+    }, tempoGiro);
+}
