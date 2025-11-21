@@ -16,14 +16,14 @@ body {
     font-family: Arial, sans-serif; display: flex; justify-content: center;
     align-items: center; min-height: 100vh; margin: 0;
     background-color: var(--bg-color); color: var(--text-color); 
-    text-align: center; overflow: hidden; 
+    text-align: center; 
     transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
     background-color: var(--container-bg); padding: 30px;
     border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    min-width: 550px; /* Acomoda a roleta de 500px */
+    min-width: 1050px; /* Acomoda a roleta de 1000px */
     display: flex; flex-direction: column; align-items: center;
 }
 
@@ -36,11 +36,11 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     width: 100%; margin-bottom: 15px; font-size: 0.9em;
 }
 
-/* --- ESTILO DA ROLETA VISUAL (500px) --- */
+/* --- ESTILO DA ROLETA VISUAL (1000px) --- */
 #roleta-wrapper {
     position: relative; 
-    width: 500px; /* 500px */
-    height: 500px; /* 500px */
+    width: 1000px; /* 1000px */
+    height: 1000px; /* 1000px */
     margin: 30px auto;
     display: flex;
     justify-content: center;
@@ -49,36 +49,38 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 
 #roleta-circulo {
     width: 100%; height: 100%; border-radius: 50%;
-    /* O JS irá gerar o background conic-gradient com as 137 fatias */
-    background: #000; /* Fundo preto inicial */
+    background: #000; 
     border: 8px solid var(--border-color); 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     transition: transform 5s ease-out; 
     position: relative; 
 }
 
-/* Ponteiro da Roleta (Maior) */
+/* Ponteiro da Roleta (Maior e Ajustado) */
 #roleta-ponteiro {
     position: absolute; width: 0; height: 0;
-    border-left: 20px solid transparent; border-right: 20px solid transparent; 
-    border-top: 40px solid var(--border-color); 
-    top: -25px; left: 50%; transform: translateX(-50%); z-index: 10;
+    border-left: 30px solid transparent; /* Maior */
+    border-right: 30px solid transparent; /* Maior */
+    border-top: 60px solid var(--border-color); /* Maior */
+    top: -40px; 
+    left: 50%; 
+    transform: translateX(-50%); z-index: 10;
 }
 
 /* Estilo para os nomes fixos (Todos os 138+) */
 .roleta-nome-setor {
-    position: absolute; top: 50%; left: 50%; width: 250px; /* Metade do diâmetro */
-    text-align: left; /* Alinha o texto na direção do raio */
-    font-size: 0.8em; 
+    position: absolute; top: 50%; left: 50%; 
+    width: 500px; /* Metade do diâmetro */
+    text-align: left; 
+    font-size: 1.0em; /* O JS definirá o tamanho final */
     font-weight: bold;
-    color: var(--text-color); /* Mantenha a cor da fonte com o tema */
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.9); /* Sombra forte para contraste */
-    transform-origin: 0 0; /* Gira no centro */
+    color: white; 
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    transform-origin: 0 0; 
     margin-left: -5px; /* Ponto de partida do raio */
     margin-top: -8px; 
     z-index: 2; 
     
-    /* Otimizações para nomes pequenos */
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
@@ -89,7 +91,7 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 .roleta-nome-temporario {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 2.0em; 
+    font-size: 3.0em; /* Maior */
     font-weight: bold; color: var(--text-color); 
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
     text-align: center; z-index: 5; line-height: 1.2; padding: 10px;
