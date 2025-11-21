@@ -1,24 +1,5 @@
-// =================================================================
-// VARIÁVEIS GLOBAIS E LISTAS DE POKÉMONS
-// =================================================================
+// --- LISTAS DE POKÉMONS E FILTROS ---
 
-const btnGirar = document.getElementById('btnGirar');
-const btnResetar = document.getElementById('btnResetar');
-const roletaCirculo = document.getElementById('roleta-circulo');
-const resultadosContainer = document.getElementById('resultados-detalhados');
-const quantidadeSelect = document.getElementById('quantidade');
-const seletorGeracao = document.getElementById('geracao');
-const themeToggle = document.getElementById('darkModeToggle');
-const somRoleta = document.getElementById('somRoleta'); 
-
-let currentRotation = 0; 
-const DISTANCIA_DA_BORDA = 470; // 1000px / 2 (raio) - 30px (margem) = 470px
-const CORES_SETORES = [
-    "#FF6347", "#1E90FF", "#32CD32", "#8A2BE2", "#FF1493", 
-    "#FFD700", "#00CED1", "#FF8C00", "#9400D3", "#ADFF2F", 
-];
-
-// LISTAS DE POKÉMONS ORIGINAIS (para cálculo de ID e filtragem)
 const kantoPokemon = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
@@ -153,7 +134,6 @@ const POKEMON_PARA_EXCLUIR = [
 ];
 
 function filtrarPokemon(lista) {
-    // Converte todos os nomes para minúsculas e remove espaços para corresponder à PokéAPI URL
     const listaNormalizada = lista.map(name => name.toLowerCase().replace(/[^a-z0-9]/g, '-'));
     return listaNormalizada.filter(nome => !POKEMON_PARA_EXCLUIR.includes(nome));
 }
@@ -214,7 +194,6 @@ function formatarNome(nome) {
     if (nome.includes('nidoran')) {
         return nome.replace('nidoran-m', 'Nidoran ♂').replace('nidoran-f', 'Nidoran ♀');
     }
-    // Capitaliza a primeira letra e substitui '-' por espaço
     return nome.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
@@ -222,14 +201,12 @@ function formatarNome(nome) {
 // NOVO: Função de busca de estatísticas da PokéAPI
 async function fetchStats(pokemonName) {
     try {
-        // Usa o nome normalizado (minúsculas, sem símbolos)
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
         if (!response.ok) {
             throw new Error(`Pokémon não encontrado para o nome: ${pokemonName}`);
         }
         const data = await response.json();
         
-        // Mapeia estatísticas (HP, Attack, Defense estão nas posições 0, 1, 2)
         const stats = {
             hp: data.stats[0].base_stat,
             attack: data.stats[1].base_stat,
@@ -281,7 +258,7 @@ function criarPokemonCard(pokemonNome, pokemonId, stats) {
 
 // FINAL: preencherRoletaComNomes - Gera o conic-gradient e os nomes na borda
 function preencherRoletaComNomes(lista, nomeGeracao) {
-    roletaCirculo.innerHTML = ''; 
+    roletaCirculo.innerHTML = ''; // Limpa o círculo 
 
     const numSetores = lista.length; 
     const anguloPorSetor = 360 / numSetores;
@@ -293,6 +270,7 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
         const cor = CORES_SETORES[i % CORES_SETORES.length];
         const anguloFim = ((i + 1) * anguloPorSetor).toFixed(2);
         const anguloInicio = (i * anguloPorSetor).toFixed(2);
+        // Adicionamos um pequeno offset (0.01 deg) para a borda preta
         gradientColors.push(`black ${anguloInicio}deg, ${cor} ${parseFloat(anguloInicio) + 0.01}deg ${anguloFim}deg`);
     }
 
@@ -330,12 +308,17 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
 function atualizarDisplayGeracao() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    
-    preencherRoletaComNomes(listaAtual, geracaoSelecionada);
+    const nomeGeracao = getNomeGeracao(geracaoSelecionada);
 
+    preencherRoletaComNomes(listaAtual, nomeGeracao);
+
+    // Limpa o resultado anterior
+    pokemonNomeH2.textContent = ''; 
     // Garante que o botão de resetar esteja escondido
     btnResetar.classList.add('hidden');
     resultadosContainer.classList.add('hidden');
+
+    // Reabilita o botão Girar
     btnGirar.disabled = false;
 }
 
@@ -349,6 +332,7 @@ function resetarRoleta() {
     roletaCirculo.style.transform = 'rotate(0deg)';
     currentRotation = 0;
     
+    // Reativa o display inicial da geração
     atualizarDisplayGeracao();
 }
 
@@ -356,7 +340,7 @@ function resetarRoleta() {
 function girarRoleta() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    const quantidade = parseInt(quantidadeSelect.value);
+    const quantidade = parseInt(quantidadeSelect.value); // Pega a quantidade a ser sorteada
 
     if (!listaAtual || listaAtual.length === 0) {
         return;
@@ -369,14 +353,14 @@ function girarRoleta() {
     // somRoleta.currentTime = 0; 
     // somRoleta.play(); // Descomente esta linha quando tiver o arquivo de áudio
 
-    // 2. Prepara a tela
+    // 2. Exibe o "GIRANDO..." no centro
     const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
     if (centroTextElement) {
         centroTextElement.textContent = 'GIRANDO...'; 
         centroTextElement.style.color = 'var(--button-primary)';
     }
-    // Remove os nomes da borda durante o giro (agora eles ficam visíveis para a animação)
-    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 1); 
+    // Remove os nomes da borda durante o giro (ficam ocultos para melhor desempenho visual)
+    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
 
     resultadosContainer.innerHTML = ''; 
     resultadosContainer.classList.add('hidden');
@@ -398,9 +382,8 @@ function girarRoleta() {
     }
 
     // --- 4. CÁLCULO DA PARADA VISUAL ---
-    // Posição do meio da fatia do Pokémon sorteado
     const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
-    const anguloAjustado = 360 - anguloParada; // Ajuste para mover o item sorteado até o ponteiro
+    const anguloAjustado = 360 - anguloParada; 
 
     const giroFinal = (numVoltas * 360) + anguloAjustado; 
     currentRotation += giroFinal; 
@@ -424,10 +407,11 @@ function girarRoleta() {
 
         // 3. Reabilita o botão
         btnGirar.disabled = false;
-        btnResetar.classList.remove('hidden');
 
         // 4. Restaura os nomes da borda
-        roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 1);
+        setTimeout(() => {
+             preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
+        }, 100);
 
 
     }, tempoGiroTotal);
