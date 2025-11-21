@@ -156,15 +156,15 @@ const pokemonPorGeracao = {
 };
 
 
-// --- REFERÊNCIAS DO DOM ---
-const btnGirar = document.getElementById('btnGirar');
+// LINHA 159: // -- REFERÊNCIAS DO DOM --
+const btnGirar = document.getElementById('btnGirar'); // CORRIGIDO: de btngirar para btnGirar
 const btnResetar = document.getElementById('btnResetar');
 const roletaCirculo = document.getElementById('roleta-circulo');
 const resultadosContainer = document.getElementById('resultados-detalhados');
 const quantidadeSelect = document.getElementById('quantidade');
 const seletorGeracao = document.getElementById('geracao');
-const themeToggle = document.getElementById('darkModeToggle');
-const somRoleta = document.getElementById('somRoleta'); 
+const themeToggle = document.getElementById('darkModeToggle'); // CORRIGIDO: Referencia o checkbox
+const somRoleta = document.getElementById('somRoleta');
 
 let currentRotation = 0; 
 const DISTANCIA_DA_BORDA = 470; // 1000px / 2 (raio) - 30px (margem) = 470px
