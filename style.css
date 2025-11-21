@@ -16,6 +16,20 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilo do Seletor de Geração */
+.seletor-geracao {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: #333;
+}
+
+#geracao {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
 /* Estilo da Pokébola/Área de Resultado */
 .pokebola {
     width: 200px;
@@ -24,6 +38,7 @@ body {
     border-radius: 50%;
     margin: 20px auto;
     display: flex;
+    flex-direction: column; /* Permite que o nome e a contagem fiquem em duas linhas */
     justify-content: center;
     align-items: center;
     font-size: 1.2em;
@@ -35,7 +50,6 @@ body {
             #333 49.5%, #333 50.5%, 
             white 50.5%, white 100%
         );
-    /* Transição para suavizar o resultado */
     transition: transform 0.5s ease-out;
 }
 
