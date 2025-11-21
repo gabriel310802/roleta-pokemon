@@ -175,25 +175,17 @@ const CORES_SETORES = [
     "#FFD700", "#00CED1", "#FF8C00", "#9400D3", "#ADFF2F", 
 ];
 
-// --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA (Bloco corrigido) ---
+// --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
 
 function getNomeGeracao(chave) {
     switch (chave) {
-        // Uso de 'return' dentro do case e 'break' (opcional, mas mais limpo)
-        case 'kanto':
-            return 'Geração 1 (Kanto) - Filtrada';
-        case 'johto':
-            return 'Geração 2 (Johto) - Filtrada';
-        case 'hoenn':
-            return 'Geração 3 (Hoenn) - Filtrada';
-        case 'sinnoh':
-            return 'Geração 4 (Sinnoh) - Filtrada';
-        case 'unova':
-            return 'Geração 5 (Unova) - Filtrada';
-        case 'todas':
-            return 'Gerações 1 a 5 (Todas) - Filtrada';
-        default:
-            return 'Selecione uma Geração';
+        case 'kanto': return 'Geração 1 (Kanto) - Filtrada';
+        case 'johto': return 'Geração 2 (Johto) - Filtrada';
+        case 'hoenn': return 'Geração 3 (Hoenn) - Filtrada';
+        case 'sinnoh': return 'Geração 4 (Sinnoh) - Filtrada';
+        case 'unova': return 'Geração 5 (Unova) - Filtrada';
+        case 'todas': return 'Gerações 1 a 5 (Todas) - Filtrada';
+        default: return 'Selecione uma Geração';
     }
 }
 
@@ -342,8 +334,8 @@ function resetarRoleta() {
 // Função principal para girar a roleta visual e sortear
 function girarRoleta() {
     const geracaoSelecionada = seletorGeracao.value;
-   const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    const quantidade = parseInt(quantidadeSelect.value); 
+    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
+    const quantidade = parseInt(quantidadeSelect.value); // Pega a quantidade a ser sorteada
 
     if (!listaAtual || listaAtual.length === 0) {
         return;
@@ -352,7 +344,7 @@ function girarRoleta() {
     btnGirar.disabled = true;
     btnResetar.classList.add('hidden');
     
-    // 1. Inicia o som (Com checagem para evitar erro se o arquivo MP3 não estiver no GitHub)
+    // 1. Inicia o som
     if (somRoleta) {
         somRoleta.currentTime = 0; 
         somRoleta.play().catch(e => console.log('Áudio não pode ser tocado: ', e)); 
@@ -378,6 +370,7 @@ function girarRoleta() {
     const numSetores = listaAtual.length; 
     const anguloPorSetor = 360 / numSetores; 
     
+    // Sorteamos o ÚLTIMO Pokémon para determinar onde a roleta irá parar visualmente
     const ultimoIndiceSorteado = Math.floor(Math.random() * listaAtual.length);
     
     for (let i = 0; i < quantidade; i++) {
@@ -387,7 +380,7 @@ function girarRoleta() {
 
     // --- 4. CÁLCULO DA PARADA VISUAL ---
     const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
-    const anguloAjustado = 360 - anguloParada; 
+    const anguloAjustado = 360 - anguloParada; // Corrigido para apontar corretamente para o topo
 
     const giroFinal = (numVoltas * 360) + anguloAjustado; 
     currentRotation += giroFinal; 
