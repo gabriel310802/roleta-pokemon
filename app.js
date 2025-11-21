@@ -1,4 +1,4 @@
-// --- LISTAS DE POKÉMONS E FILTROS (Permanecem IGUAIS) ---
+// --- LISTAS DE POKÉMONS E FILTROS ---
 
 const kantoPokemon = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
@@ -355,8 +355,8 @@ function girarRoleta() {
         centroTextElement.textContent = 'GIRANDO...'; 
         centroTextElement.style.color = 'var(--button-primary)';
     }
-    // Remove os nomes da borda durante o giro (agora eles ficam visíveis para a animação)
-    // roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
+    // Remove os nomes da borda durante o giro (ficam ocultos para melhor performance visual)
+    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
 
     resultadosContainer.innerHTML = ''; // Limpa resultados anteriores
     resultadosContainer.classList.add('hidden');
@@ -400,7 +400,7 @@ function girarRoleta() {
         // 3. Reabilita o botão
         btnGirar.disabled = false;
 
-        // 4. Restaura os nomes da borda (após um pequeno delay para garantir a parada)
+        // 4. Restaura os nomes da borda
         setTimeout(() => {
              preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
         }, 100);
@@ -446,7 +446,7 @@ function exibirResultado(resultados) {
 }
 
 
-// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO E LISTENERS ---
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
 
 function toggleTheme() {
     const isDark = themeToggle.checked;
