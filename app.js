@@ -175,17 +175,25 @@ const CORES_SETORES = [
     "#FFD700", "#00CED1", "#FF8C00", "#9400D3", "#ADFF2F", 
 ];
 
-// --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
+// --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA (Bloco corrigido) ---
 
 function getNomeGeracao(chave) {
     switch (chave) {
-        case 'kanto': return 'Geração 1 (Kanto) - Filtrada';
-        case 'johto': return 'Geração 2 (Johto) - Filtrada';
-        case 'hoenn': return 'Geração 3 (Hoenn) - Filtrada';
-        case 'sinnoh': return 'Geração 4 (Sinnoh) - Filtrada';
-        case 'unova': return 'Geração 5 (Unova) - Filtrada';
-        case 'todas': return 'Gerações 1 a 5 (Todas) - Filtrada';
-        default: return 'Selecione uma Geração';
+        // Uso de 'return' dentro do case e 'break' (opcional, mas mais limpo)
+        case 'kanto':
+            return 'Geração 1 (Kanto) - Filtrada';
+        case 'johto':
+            return 'Geração 2 (Johto) - Filtrada';
+        case 'hoenn':
+            return 'Geração 3 (Hoenn) - Filtrada';
+        case 'sinnoh':
+            return 'Geração 4 (Sinnoh) - Filtrada';
+        case 'unova':
+            return 'Geração 5 (Unova) - Filtrada';
+        case 'todas':
+            return 'Gerações 1 a 5 (Todas) - Filtrada';
+        default:
+            return 'Selecione uma Geração';
     }
 }
 
