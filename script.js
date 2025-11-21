@@ -1,7 +1,5 @@
-// --- LISTAS DE POKÉMONS (ORGANIZADAS POR GERAÇÃO) ---
-
+// Lista dos 151 Pokémons da Geração 1 (Kanto)
 const kantoPokemon = [
-    // 151 Pokémons da Geração 1
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -28,9 +26,8 @@ const kantoPokemon = [
     "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
     "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"
 ];
-
+// NOVOS 100 POKÉMONS da Geração 2 (Johto)
 const johtoPokemon = [
-    // 100 Pokémons da Geração 2
     "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", 
     "Totodile", "Croconaw", "Feraligatr", "Sentret", "Furret", "Hoothoot", 
     "Noctowl", "Ledyba", "Ledian", "Spinarak", "Ariados", "Crobat", "Chinchou", 
@@ -49,59 +46,88 @@ const johtoPokemon = [
     "Pupitar", "Tyranitar", "Lugia", "Ho-Oh", "Celebi"
 ];
 
+// Objeto para facilitar o acesso às listas
 const pokemonPorGeracao = {
     kanto: kantoPokemon,
     johto: johtoPokemon,
-    todas: kantoPokemon.concat(johtoPokemon) // Lista combinada
+    todas: kantoPokemon.concat(johtoPokemon) // Combina as duas listas
 };
 
 // --- REFERÊNCIAS DO DOM ---
 const btnGirar = document.getElementById('btnGirar');
 const resultadoDiv = document.getElementById('resultado');
-const pokemonNomeH2 = document.
-    // Função principal para girar a roleta com nomes 'ao vivo'
+const pokemonNomeH2 = document.getElementById('pokemon-nome');
+const pokemonImg = document.getElementById('pokemon-img');
+const seletorGeracao = document.getElementById('geracao'); // NOVA REFERÊNCIA
+
+
+// Função principal para girar a roleta
 function girarRoleta() {
+    // 1. Obtém a lista de Pokémon com base na seleção
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
 
     if (!listaAtual || listaAtual.length === 0) {
-        resultadoDiv.innerHTML = '<p>Erro: Lista de Pokémon Vazia!</p>';
+        resultadoDiv.textContent = 'Nenhuma Geração Selecionada ou Lista Vazia!';
         return;
     }
 
-    // Inicia a animação e desabilita o botão
+    // 2. Desabilita o botão e inicia a animação
     btnGirar.disabled = true;
+    resultadoDiv.textContent = 'GIRANDO...';
     resultadoDiv.classList.add('girando');
     pokemonNomeH2.textContent = '';
     pokemonImg.classList.add('hidden');
 
-    const tempoGiro = 3000; // 3.0 segundos para o giro total
-    const intervaloScroll = 50; // Atualiza o nome a cada 50 milissegundos
-
-    // --- LÓGICA DO SCROLL DE NOMES ---
-    let scrollInterval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * listaAtual.length);
-        const randomPokemonName = listaAtual[randomIndex];
-        
-        // Exibe o nome aleatório na área da roleta
-        resultadoDiv.innerHTML = `<p>${randomPokemonName}</p>`;
-    }, intervaloScroll);
-    // --- FIM LÓGICA DO SCROLL ---
+    // 3. Define um tempo de "giro" (simulado)
+    const tempoGiro = 2500; // 2.5 segundos
 
     setTimeout(() => {
-        // 1. Para o intervalo de scroll e a animação
-        clearInterval(scrollInterval);
+        // 4. Para o giro e seleciona o Pokémon
         resultadoDiv.classList.remove('girando');
         
-        // 2. Seleciona o Pokémon final
         const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
         const pokemonSorteado = listaAtual[indiceSorteado];
         
-        // 3. Exibe o resultado final
+        // 5. Exibe o resultado e busca a imagem
         exibirResultado(pokemonSorteado);
 
-        // 4. Reabilita o botão
+        // 6. Reabilita o botão
         btnGirar.disabled = false;
 
     }, tempoGiro);
 }
+
+// Função para exibir o resultado final e buscar a imagem
+async function exibirResultado(nome) {
+    resultadoDiv.innerHTML = `<p>${nome}</p>`;
+    pokemonNomeH2.textContent = nome;
+
+    try {
+        // Busca a lista completa para encontrar o ID corretamente
+        const listaCompleta = pokemonPorGeracao['todas'];
+        
+        // O ID é o índice na lista completa (Gen 1 + Gen 2) + 1
+        const idPokemon = listaCompleta.indexOf(nome) + 1;
+
+        // Se por algum motivo o Pokémon não for encontrado, tratamos (ex: id = 0 se index = -1)
+        if (idPokemon === 0) {
+             throw new Error("Pokémon não encontrado na lista combinada.");
+        }
+
+        // URL da imagem de uma fonte pública (PokéAPI)
+        const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`;
+        
+        pokemonImg.src = imageUrl;
+        pokemonImg.alt = `Imagem do Pokémon ${nome}`;
+        pokemonImg.classList.remove('hidden');
+
+    } catch (error) {
+        console.error('Erro ao buscar imagem do Pokémon:', error);
+        pokemonImg.classList.add('hidden');
+        pokemonNomeH2.textContent = `${nome} (Erro ao carregar imagem)`;
+    }
+}
+
+// Adiciona o evento de clique ao botão
+btnGirar.addEventListener('click', girarRoleta);
