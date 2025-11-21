@@ -98,3 +98,26 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 }
 
 /* (Restante do CSS permanece inalterado) */
+/* --- NOVO ESTILO PARA CADA SETOR INDIVIDUAL (com borda) --- */
+.setor-roleta-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* O JS irá calcular width, height, transform, background-color, border-color */
+    border-right: 1px solid black; /* Borda que separa visualmente cada fatia */
+    box-sizing: border-box; /* Garante que a borda não aumente o tamanho total */
+    transform-origin: 0 0; /* Ponto de rotação no centro da roleta */
+    overflow: hidden; /* Garante que o conteúdo fique dentro do setor */
+}
+
+/* O texto do nome precisa ter seu próprio posicionamento dentro do setor */
+.setor-roleta-item .roleta-nome-setor {
+    position: absolute;
+    top: 50%; /* Alinha verticalmente ao centro da altura do setor (triângulo) */
+    left: 0;   /* Começa no início do setor */
+    width: 100%; /* O nome pode ocupar a largura do setor */
+    text-align: left;
+    transform-origin: 0 0; /* O JS definirá a rotação e translação */
+    padding-left: 10px; /* Um pequeno espaçamento da borda interna do setor */
+    box-sizing: border-box;
+}
