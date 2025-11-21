@@ -49,20 +49,103 @@ const johtoPokemon = [
     "Pupitar", "Tyranitar", "Lugia", "Ho-Oh", "Celebi"
 ];
 
+const hoennPokemon = [
+    // 135 Pokémons da Geração 3 (252-386)
+    "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", 
+    "Mudkip", "Marshtomp", "Swampert", "Poochyena", "Mightyena", "Zigzagoon", 
+    "Linoone", "Wurmple", "Silcoon", "Beautifly", "Cascoon", "Dustox", 
+    "Lotad", "Lombre", "Ludicolo", "Seedot", "Nuzleaf", "Shiftry", 
+    "Taillow", "Swellow", "Wingull", "Pelipper", "Ralts", "Kirlia", 
+    "Gardevoir", "Surskit", "Masquerain", "Shroomish", "Breloom", "Slakoth", 
+    "Vigoroth", "Slaking", "Nincada", "Ninjask", "Shedinja", "Whismur", 
+    "Loudred", "Exploud", "Makuhita", "Hariyama", "Azurill", "Nosepass", 
+    "Skitty", "Delcatty", "Sableye", "Mawile", "Aron", "Lairon", 
+    "Aggron", "Meditite", "Medicham", "Electrike", "Manectric", "Plusle", 
+    "Minun", "Volbeat", "Illumise", "Roselia", "Gulpin", "Swalot", 
+    "Carvanha", "Sharpedo", "Wailmer", "Wailord", "Numel", "Camerupt", 
+    "Torkoal", "Spoink", "Grumpig", "Spinda", "Trapinch", "Vibrava", 
+    "Flygon", "Cacnea", "Cacturne", "Swablu", "Altaria", "Zangoose", 
+    "Seviper", "Lunatone", "Solrock", "Barboach", "Whiscash", "Corphish", 
+    "Crawdaunt", "Baltoy", "Claydol", "Lileep", "Cradily", "Anorith", 
+    "Armaldo", "Feebas", "Milotic", "Castform", "Kecleon", "Shuppet", 
+    "Banette", "Duskull", "Dusclops", "Tropius", "Chimecho", "Absol", 
+    "Wynaut", "Snorunt", "Glalie", "Spheal", "Sealeo", "Walrein", 
+    "Clamperl", "Huntail", "Gorebyss", "Relicanth", "Luvdisc", "Bagon", 
+    "Shelgon", "Salamence", "Beldum", "Metang", "Metagross", "Regirock", 
+    "Regice", "Registeel", "Latias", "Latios", "Kyogre", "Groudon", 
+    "Rayquaza", "Jirachi", "Deoxys"
+];
+
+const sinnohPokemon = [
+    // 107 Pokémons da Geração 4 (387-493)
+    "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", 
+    "Piplup", "Prinplup", "Empoleon", "Starly", "Staravia", "Staraptor", 
+    "Bidoof", "Bibarel", "Kricketot", "Kricketune", "Shinx", "Luxio", 
+    "Luxray", "Budew", "Roserade", "Cranidos", "Rampardos", "Shieldon", 
+    "Bastiodon", "Burmy", "Wormadam", "Mothim", "Combee", "Vespiquen", 
+    "Pachirisu", "Buizel", "Floatzel", "Cherubi", "Cherrim", "Shellos", 
+    "Gastrodon", "Ambipom", "Drifloon", "Drifblim", "Buneary", "Lopunny", 
+    "Mismagius", "Honchkrow", "Glameow", "Purugly", "Chingling", "Stunky", 
+    "Skuntank", "Bronzor", "Bronzong", "Bonsly", "Mime Jr.", "Happiny", 
+    "Chatot", "Spiritomb", "Gible", "Gabite", "Garchomp", "Munchlax", 
+    "Riolu", "Lucario", "Hippopotas", "Hippowdon", "Skorupi", "Drapion", 
+    "Croagunk", "Toxicroak", "Carnivine", "Finneon", "Lumineon", "Mantyke", 
+    "Snover", "Abomasnow", "Weavile", "Magnezone", "Lickilicky", "Rhyperior", 
+    "Tangrowth", "Electivire", "Magmortar", "Togekiss", "Yanmega", "Leafeon", 
+    "Glaceon", "Gliscor", "Mamoswine", "Porygon-Z", "Gallade", "Probopass", 
+    "Dusknoir", "Froslass", "Rotom", "Uxie", "Mesprit", "Azelf", 
+    "Dialga", "Palkia", "Heatran", "Regigigas", "Giratina", "Cresselia", 
+    "Phione", "Manaphy", "Darkrai", "Shaymin", "Arceus"
+];
+
+const unovaPokemon = [
+    // 156 Pokémons da Geração 5 (494-649)
+    "Victini", "Snivy", "Servine", "Serperior", "Tepig", "Pignite", 
+    "Emboar", "Oshawott", "Dewott", "Samurott", "Patrat", "Watchog", 
+    "Lillipup", "Herdier", "Stoutland", "Purrloin", "Liepard", "Pansage", 
+    "Simisage", "Pansear", "Simisear", "Panpour", "Simipour", "Munna", 
+    "Musharna", "Pidove", "Tranquill", "Unfezant", "Blitzle", "Zebstrika", 
+    "Roggenrola", "Boldore", "Gigalith", "Woobat", "Swoobat", "Drilbur", 
+    "Excadrill", "Audino", "Timburr", "Gurdurr", "Conkeldurr", "Tympole", 
+    "Palpitoad", "Seismitoad", "Throh", "Sawk", "Sewaddle", "Swadloon", 
+    "Leavanny", "Venipede", "Whirlipede", "Scolipede", "Cottonee", "Whimsicott", 
+    "Petilil", "Lilligant", "Basculin", "Sandile", "Krokorok", "Krookodile", 
+    "Darumaka", "Darmanitan", "Maractus", "Dwebble", "Crustle", "Scraggy", 
+    "Scrafty", "Sigilyph", "Yamask", "Cofagrigus", "Tirtouga", "Carracosta", 
+    "Archen", "Archeops", "Trubbish", "Garbodor", "Zorua", "Zoroark", 
+    "Minccino", "Cinccino", "Gothita", "Gothorita", "Gothitelle", "Solosis", 
+    "Duosion", "Reuniclus", "Ducklett", "Swanna", "Vanillite", "Vanillish", 
+    "Vanilluxe", "Deerling", "Sawsbuck", "Emolga", "Karrablast", "Escavalier", 
+    "Foongus", "Amoonguss", "Frillish", "Jellicent", "Alomomola", "Joltik", 
+    "Galvantula", "Ferroseed", "Ferrothorn", "Klink", "Klang", "Klinklang", 
+    "Tynamo", "Eelektrik", "Eelektross", "Elgyem", "Beheeyem", "Litwick", 
+    "Lampent", "Chandelure", "Axew", "Fraxure", "Haxorus", "Cubchoo", 
+    "Beartic", "Cryogonal", "Shelmet", "Accelgor", "Stunfisk", "Mienfoo", 
+    "Mienshao", "Druddigon", "Golett", "Golurk", "Pawniard", "Bisharp", 
+    "Bouffalant", "Rufflet", "Braviary", "Vullaby", "Mandibuzz", "Heatmor", 
+    "Durant", "Deino", "Zweilous", "Hydreigon", "Larvesta", "Volcarona", 
+    "Cobalion", "Terrakion", "Virizion", "Tornadus", "Thundurus", "Reshiram", 
+    "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
+];
+
+
 const pokemonPorGeracao = {
     kanto: kantoPokemon,
     johto: johtoPokemon,
-    todas: kantoPokemon.concat(johtoPokemon) // Lista combinada
+    hoenn: hoennPokemon,
+    sinnoh: sinnohPokemon,
+    unova: unovaPokemon,
+    todas: kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon) // Combine TODAS as 5 gerações
 };
 
 // --- REFERÊNCIAS DO DOM ---
 const btnGirar = document.getElementById('btnGirar');
-const roletaCirculo = document.getElementById('roleta-circulo'); // Agora a roleta visual
+const roletaCirculo = document.getElementById('roleta-circulo');
 const pokemonNomeH2 = document.getElementById('pokemon-nome');
 const pokemonImg = document.getElementById('pokemon-img');
 const seletorGeracao = document.getElementById('geracao');
 
-let currentRotation = 0; // Para rastrear a rotação anterior e garantir giro contínuo
+let currentRotation = 0; 
 
 
 // Função para obter o nome da geração formatado
@@ -72,8 +155,14 @@ function getNomeGeracao(chave) {
             return 'Geração 1 (Kanto)';
         case 'johto':
             return 'Geração 2 (Johto)';
+        case 'hoenn':
+            return 'Geração 3 (Hoenn)';
+        case 'sinnoh':
+            return 'Geração 4 (Sinnoh)';
+        case 'unova':
+            return 'Geração 5 (Unova)';
         case 'todas':
-            return 'Gerações 1 e 2 (Todas)';
+            return 'Gerações 1 a 5 (Todas)';
         default:
             return 'Selecione uma Geração';
     }
@@ -99,11 +188,11 @@ function atualizarDisplayGeracao() {
     pokemonNomeH2.textContent = ''; 
     pokemonImg.classList.add('hidden'); 
 
-    // Reseta a rotação da roleta visual (Para o estado inicial)
-    roletaCirculo.style.transition = 'none'; // Desativa a transição
+    // Reseta a rotação da roleta visual 
+    roletaCirculo.style.transition = 'none'; 
     roletaCirculo.style.transform = `rotate(0deg)`;
     setTimeout(() => {
-        roletaCirculo.style.transition = 'transform 5s ease-out'; // Reativa a transição
+        roletaCirculo.style.transition = 'transform 5s ease-out'; 
     }, 50);
     currentRotation = 0;
 }
@@ -118,35 +207,25 @@ function girarRoleta() {
         return;
     }
 
-    // Desabilita o botão
     btnGirar.disabled = true;
-
-    // Limpa o círculo da roleta
     roletaCirculo.innerHTML = '';
 
-
-    const tempoGiroTotal = 5000; // 5 segundos para o giro completo e parada
-    const numVoltas = 5; // Número mínimo de voltas (1800 graus)
+    const tempoGiroTotal = 5000; 
+    const numVoltas = 5; 
     
     // Sorteia o Pokémon final
     const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
     const pokemonSorteado = listaAtual[indiceSorteado];
 
     // --- CÁLCULO DA ROTAÇÃO ---
-    // A roleta no CSS tem 8 setores (45 graus cada). 
     const numSetoresVisuais = 8; 
     const anguloPorSetor = 360 / numSetoresVisuais;
-    
-    // Mapeamos o Pokémon sorteado para um "setor visual" arbitrário
     const setorAlvo = indiceSorteado % numSetoresVisuais; 
-    
-    // Define o ângulo de parada dentro do setor (com aleatoriedade)
     let anguloParada = (setorAlvo * anguloPorSetor) + (Math.random() * anguloPorSetor);
-    anguloParada += (anguloPorSetor / 2); // Aponta para o meio do setor
+    anguloParada += (anguloPorSetor / 2); 
     
-    // Adiciona as voltas completas
     const giroFinal = (numVoltas * 360) + anguloParada; 
-    currentRotation += giroFinal; // Atualiza a rotação acumulada
+    currentRotation += giroFinal; 
 
     // Define a rotação e a transição
     roletaCirculo.style.transform = `rotate(${currentRotation}deg)`;
@@ -156,8 +235,6 @@ function girarRoleta() {
     let scrollInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * listaAtual.length);
         const randomPokemonName = listaAtual[randomIndex];
-        
-        // Exibe o nome aleatório no centro
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
     }, 50);
 
@@ -168,7 +245,7 @@ function girarRoleta() {
         // 2. Exibe o nome final do Pokémon sorteado no centro da roleta
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${pokemonSorteado}</p>`;
         
-        // 3. Exibe o resultado final completo (imagem e nome abaixo da roleta)
+        // 3. Exibe o resultado final completo
         exibirResultado(pokemonSorteado);
 
         // 4. Reabilita o botão
@@ -182,13 +259,15 @@ async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
     try {
-        const listaCompleta = pokemonPorGeracao['todas'];
-        const idPokemon = listaCompleta.indexOf(nome) + 1;
+        // Usa a lista combinada de TODAS as gerações para encontrar o ID correto (1 a 649)
+        const listaCompleta = pokemonPorGeracao['todas']; 
+        const idPokemon = listaCompleta.indexOf(nome) + 1; // ID do Pokémon na Pokédex
 
         if (idPokemon === 0) {
              throw new Error("ID do Pokémon não encontrado.");
         }
 
+        // URL da imagem usando o ID na PokéAPI
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`;
         
         pokemonImg.src = imageUrl;
