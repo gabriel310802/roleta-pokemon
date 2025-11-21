@@ -314,3 +314,42 @@ async function exibirResultado(nome) {
 btnGirar.addEventListener('click', girarRoleta);
 seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
 atualizarDisplayGeracao();
+// --- NOVO: LÓGICA DE TEMA ESCURO ---
+const themeToggle = document.getElementById('darkModeToggle');
+
+// Função para aplicar/remover a classe dark-theme
+function toggleTheme() {
+    const isDark = themeToggle.checked;
+    
+    // Aplica a classe no body
+    document.body.classList.toggle('dark-theme', isDark);
+
+    // Salva a preferência no armazenamento local
+    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+}
+
+// 1. Event Listener para a chave
+themeToggle.addEventListener('change', toggleTheme);
+
+// 2. Carrega o tema salvo ao iniciar a página
+function loadTheme() {
+    const savedTheme = localStorage.getItem('darkMode');
+
+    if (savedTheme === 'enabled') {
+        // Se estiver salvo como escuro, marca o checkbox e aplica o tema
+        themeToggle.checked = true;
+        document.body.classList.add('dark-theme');
+    } else {
+        // Garante que o checkbox não esteja marcado para o tema claro
+        themeToggle.checked = false;
+        document.body.classList.remove('dark-theme');
+    }
+}
+
+// Chama a função de carregamento ao iniciar o script
+loadTheme();
+// --- FIM LÓGICA DE TEMA ESCURO ---
+
+
+// --- LISTENERS DE EVENTOS ---
+// ... (mantenha seus listeners existentes: btnGirar, seletorGeracao, atualizarDisplayGeracao) ...
