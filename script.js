@@ -123,6 +123,7 @@ const unovaPokemon = [
     "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
 ];
 
+
 // Lista de Pokémons a Serem Excluídos (Iniciais, Lendários, Míticos)
 const POKEMON_PARA_EXCLUIR = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew",
@@ -165,6 +166,11 @@ const themeToggle = document.getElementById('darkModeToggle');
 let currentRotation = 0; 
 const DISTANCIA_DA_BORDA = 220; // 500px / 2 (raio) - 30px (margem) = 220px
 
+// Cores para os setores da roleta (repetidas)
+const CORES_SETORES = [
+    "#FF6347", "#1E90FF", "#32CD32", "#8A2BE2", "#FF1493", 
+    "#FFD700", "#00CED1", "#FF8C00", "#9400D3", "#ADFF2F", 
+];
 
 // --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
 
@@ -180,32 +186,47 @@ function getNomeGeracao(chave) {
     }
 }
 
-// NOVO: preencherRoletaComNomes agora sempre exibe TODOS os nomes na borda
+// NOVO: preencherRoletaComNomes agora cria o conic-gradient dinamicamente e os nomes no centro
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo para adicionar nomes na borda e o texto central
 
-    const numSetores = lista.length; // Número de setores é igual ao número de Pokémons na lista
-    const anguloPorNome = 360 / numSetores;
+    const numSetores = lista.length; 
+    const anguloPorSetor = 360 / numSetores;
     
-    // Adiciona TODOS os nomes da lista na borda
+    let gradientColors = [];
+    
+    // 1. Gera a string de cores do conic-gradient para as 137+ fatias
+    for (let i = 0; i < numSetores; i++) {
+        const cor = CORES_SETORES[i % CORES_SETORES.length];
+        const anguloFim = ((i + 1) * anguloPorSetor).toFixed(2);
+        gradientColors.push(`${cor} ${anguloFim}deg`);
+    }
+
+    // 2. Aplica o conic-gradient no background (cria as 137+ fatias visuais)
+    roletaCirculo.style.background = `conic-gradient(${gradientColors.join(', ')})`;
+    
+    // 3. Posiciona TODOS os nomes na borda
     lista.forEach((nome, i) => {
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
-        // Fórmula para o tamanho da fonte: Reduz baseado no número de itens
+        // Fórmula para o tamanho da fonte
         nomeDiv.style.fontSize = `${Math.max(0.2, 0.8 - (numSetores / 100) * 0.15)}em`; 
         
         // Posiciona e rotaciona o nome
-        const angulo = i * anguloPorNome;
-        nomeDiv.style.transform = `rotate(${angulo}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(-${angulo}deg)`;
+        const angulo = i * anguloPorSetor;
+        // Ajustamos para o meio da fatia e rotacionamos diagonalmente (ângulo + 90)
+        const anguloTexto = angulo + (anguloPorSetor / 2);
+        
+        nomeDiv.style.transform = `rotate(${anguloTexto}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(90deg)`;
         
         roletaCirculo.appendChild(nomeDiv);
     });
     
-    // Adiciona o texto central (informação da geração)
+    // 4. Adiciona o texto central (informação da geração)
     const infoText = document.createElement('p');
-    infoText.className = 'roleta-nome-temporario'; // Reutilizamos a classe para o texto central grande
+    infoText.className = 'roleta-nome-temporario'; 
     infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
     roletaCirculo.appendChild(infoText);
 }
@@ -256,7 +277,7 @@ function girarRoleta() {
     const pokemonSorteado = listaAtual[indiceSorteado];
 
     // --- CÁLCULO DA ROTAÇÃO (USANDO O NÚMERO TOTAL DE ITENS) ---
-    const numSetores = listaAtual.length; // Número de setores é igual ao número de Pokémons
+    const numSetores = listaAtual.length; 
     const anguloPorSetor = 360 / numSetores; 
     
     // Ângulo de parada exato (apontamos para o meio da fatia do Pokémon)
@@ -278,6 +299,9 @@ function girarRoleta() {
         const randomPokemonName = listaAtual[randomIndex];
         // Exibe o nome aleatório no centro
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
+        
+        // Remove os nomes da borda durante o giro para melhor desempenho e menos confusão visual
+        roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
     }, 50);
 
 
@@ -294,10 +318,15 @@ function girarRoleta() {
         // 4. Reabilita o botão
         btnGirar.disabled = false;
 
+        // 5. Restaura os nomes da borda
+        // Chamamos a função de preenchimento para redesenhar o círculo após a parada
+        preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
+
+
     }, tempoGiroTotal);
 }
 
-// Função para exibir o resultado final e buscar a imagem
+// Função para exibir o resultado final e buscar a imagem (Permanecem Iguais)
 async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
@@ -323,7 +352,7 @@ async function exibirResultado(nome) {
 }
 
 
-// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO (Permanecem Iguais) ---
 
 function toggleTheme() {
     const isDark = themeToggle.checked;
