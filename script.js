@@ -124,46 +124,29 @@ const unovaPokemon = [
     "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
 ];
 
-// --- LISTAS DE POKÉMONS A SEREM EXCLUÍDOS ---
+// --- LISTAS DE POKÉMONS E FILTROS (MANTIDAS) ---
+
+// (Todas as listas de kantoPokemon até unovaPokemon permanecem aqui)
+const kantoPokemon = [ /* ... 151 nomes ... */ ];
+const johtoPokemon = [ /* ... 100 nomes ... */ ];
+const hoennPokemon = [ /* ... 135 nomes ... */ ];
+const sinnohPokemon = [ /* ... 107 nomes ... */ ];
+const unovaPokemon = [ /* ... 156 nomes ... */ ];
+
+// Lista de Pokémons a Serem Excluídos (Iniciais, Lendários, Míticos)
 const POKEMON_PARA_EXCLUIR = [
-    // --- Geração 1 (Kanto) ---
-    // Iniciais e Evoluções
-    "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise",
-    // Lendários/Míticos
-    "Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew",
-
-    // --- Geração 2 (Johto) ---
-    // Iniciais e Evoluções
-    "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", "Totodile", "Croconaw", "Feraligatr",
-    // Lendários/Míticos
-    "Raikou", "Entei", "Suicune", "Lugia", "Ho-Oh", "Celebi",
-
-    // --- Geração 3 (Hoenn) ---
-    // Iniciais e Evoluções
-    "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert",
-    // Lendários/Míticos
-    "Regirock", "Regice", "Registeel", "Latias", "Latios", "Kyogre", "Groudon", "Rayquaza", "Jirachi", "Deoxys",
-    
-    // --- Geração 4 (Sinnoh) ---
-    // Iniciais e Evoluções
-    "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon",
-    // Lendários/Míticos
-    "Uxie", "Mesprit", "Azelf", "Dialga", "Palkia", "Heatran", "Regigigas", "Giratina", "Cresselia", "Phione", "Manaphy", "Darkrai", "Shaymin", "Arceus",
-    
-    // --- Geração 5 (Unova) ---
-    // Iniciais e Evoluções
-    "Snivy", "Servine", "Serperior", "Tepig", "Pignite", "Emboar", "Oshawott", "Dewott", "Samurott",
-    // Lendários/Míticos e especiais (Victini)
-    "Victini", "Cobalion", "Terrakion", "Virizion", "Tornadus", "Thundurus", "Reshiram", "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
+    "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew",
+    "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", "Totodile", "Croconaw", "Feraligatr", "Raikou", "Entei", "Suicune", "Lugia", "Ho-Oh", "Celebi",
+    "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Regirock", "Regice", "Registeel", "Latias", "Latios", "Kyogre", "Groudon", "Rayquaza", "Jirachi", "Deoxys",
+    "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon", "Uxie", "Mesprit", "Azelf", "Dialga", "Palkia", "Heatran", "Regigigas", "Giratina", "Cresselia", "Phione", "Manaphy", "Darkrai", "Shaymin", "Arceus",
+    "Snivy", "Servine", "Serperior", "Tepig", "Pignite", "Emboar", "Oshawott", "Dewott", "Samurott", "Victini", "Cobalion", "Terrakion", "Virizion", "Tornadus", "Thundurus", "Reshiram", "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
 ];
 
-// --- FUNÇÃO DE FILTRO ---
 function filtrarPokemon(lista) {
-    // Retorna uma nova lista, excluindo os nomes que estão na lista POKEMON_PARA_EXCLUIR
     return lista.filter(nome => !POKEMON_PARA_EXCLUIR.includes(nome));
 }
 
-// --- APLICAÇÃO DO FILTRO NAS LISTAS ---
+// Aplica o filtro
 const kantoFiltrada = filtrarPokemon(kantoPokemon);
 const johtoFiltrada = filtrarPokemon(johtoPokemon);
 const hoennFiltrada = filtrarPokemon(hoennPokemon);
@@ -177,9 +160,9 @@ const pokemonPorGeracao = {
     hoenn: hoennFiltrada,
     sinnoh: sinnohFiltrada,
     unova: unovaFiltrada,
-    // A lista "todas" também é filtrada, unindo todas as listas filtradas
     todas: kantoFiltrada.concat(johtoFiltrada, hoennFiltrada, sinnohFiltrada, unovaFiltrada)
 };
+
 
 // --- REFERÊNCIAS DO DOM ---
 const btnGirar = document.getElementById('btnGirar');
@@ -190,12 +173,12 @@ const seletorGeracao = document.getElementById('geracao');
 const themeToggle = document.getElementById('darkModeToggle');
 
 let currentRotation = 0; 
+const DISTANCIA_DA_BORDA = 220; // NOVO: 500px / 2 (raio) - 30px (margem) = 220px
 
 
 // --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
 
 function getNomeGeracao(chave) {
-    // Apenas mudamos o texto para refletir que as listas são 'filtradas'
     switch (chave) {
         case 'kanto': return 'Geração 1 (Kanto) - Filtrada';
         case 'johto': return 'Geração 2 (Johto) - Filtrada';
@@ -211,23 +194,25 @@ function getNomeGeracao(chave) {
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo
 
-    const nomesVisiveis = 8;
-    const anguloPorNome = 360 / nomesVisiveis;
-
-    // Adiciona 8 nomes da lista (usando módulo para garantir que sempre haja um nome)
-    for (let i = 0; i < nomesVisiveis; i++) {
-        // Usa o índice 'i' da lista ATUAL (corrigindo o bug do filtro solo)
-        const nome = lista[i % lista.length]; 
+    const numSetores = lista.length; // NOVO: Número de setores = número de Pokémons
+    const anguloPorNome = 360 / numSetores;
+    
+    // Adiciona TODOS os nomes da lista
+    lista.forEach((nome, i) => {
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
+        // Fórmula para o tamanho da fonte: Reduz baseado no número de itens
+        // É aqui que a legibilidade será perdida em grandes gerações (138+)
+        nomeDiv.style.fontSize = `${Math.max(0.2, 0.8 - (numSetores / 100) * 0.15)}em`; 
+        
         // Posiciona e rotaciona o nome
         const angulo = i * anguloPorNome;
-        nomeDiv.style.transform = `rotate(${angulo}deg) translate(0, -120px) rotate(-${angulo}deg)`;
+        nomeDiv.style.transform = `rotate(${angulo}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(-${angulo}deg)`;
         
         roletaCirculo.appendChild(nomeDiv);
-    }
+    });
     
     // Adiciona o texto central (total de Pokémons)
     const infoText = document.createElement('p');
@@ -267,9 +252,7 @@ function girarRoleta() {
     }
 
     btnGirar.disabled = true;
-    
-    // Remove os nomes dos setores e o texto central
-    roletaCirculo.innerHTML = '';
+    roletaCirculo.innerHTML = ''; // Limpa antes do scroll
 
     const tempoGiroTotal = 5000; 
     const numVoltas = 5; 
@@ -278,16 +261,16 @@ function girarRoleta() {
     const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
     const pokemonSorteado = listaAtual[indiceSorteado];
 
-    // --- CÁLCULO DA ROTAÇÃO ---
-    // Mantemos 8 setores visuais, mas o sorteio é de 137, por exemplo.
-    const numSetoresVisuais = 8; 
-    const anguloPorSetor = 360 / numSetoresVisuais;
-    // O setor alvo é calculado usando o índice do sorteado em relação aos 8 setores visuais
-    const setorAlvo = indiceSorteado % numSetoresVisuais; 
-    let anguloParada = (setorAlvo * anguloPorSetor) + (Math.random() * anguloPorSetor);
-    anguloParada += (anguloPorSetor / 2); 
+    // --- CÁLCULO DA ROTAÇÃO (USANDO O NÚMERO TOTAL DE ITENS) ---
+    const numSetores = listaAtual.length; // Número de setores é igual ao número de Pokémons
+    const anguloPorSetor = 360 / numSetores; 
     
-    const giroFinal = (numVoltas * 360) + anguloParada; 
+    // Ângulo de parada exato (apontamos para o meio da fatia do Pokémon)
+    const anguloParada = (indiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
+    const anguloAjustado = 360 - anguloParada; // Ajuste para mover o item sorteado até o ponteiro
+
+    // Adiciona as voltas completas
+    const giroFinal = (numVoltas * 360) + anguloAjustado; 
     currentRotation += giroFinal; 
 
     // Define a rotação e a transição
@@ -325,12 +308,10 @@ async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
     try {
-        // A lista completa para buscar o ID precisa ser a lista original (não filtrada) para manter a ordem correta do Pokedex (ID 1 = Bulbasaur)
         const listaCompletaOriginal = kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon); 
         const idPokemon = listaCompletaOriginal.indexOf(nome) + 1; 
 
         if (idPokemon === 0) {
-             // Se o nome não for encontrado na lista original (o que não deve acontecer)
              throw new Error("ID do Pokémon não encontrado.");
         }
 
