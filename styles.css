@@ -1,64 +1,39 @@
 /* --- VARIAVEIS DE TEMA --- */
 :root {
-    /* Tema Claro Padrão */
-    --bg-color: #f0f0f0;
-    --text-color: #333;
-    --container-bg: white;
-    --border-color: #333;
-    --card-border: #ccc;
-    --button-primary: #3b4cca;
+    --bg-color: #f0f0f0; --text-color: #333; --container-bg: white;
+    --border-color: #333; --card-border: #ccc; --button-primary: #3b4cca;
     --button-hover: #0033a0;
 }
 
 body.dark-theme {
-    /* Tema Escuro Ativado */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --container-bg: #1e1e1e;
-    --border-color: #bbb;
-    --card-border: #555;
-    --button-primary: #8a94ff;
+    --bg-color: #121212; --text-color: #e0e0e0; --container-bg: #1e1e1e;
+    --border-color: #bbb; --card-border: #555; --button-primary: #8a94ff;
     --button-hover: #5e69ff;
 }
 
 /* --- ESTILOS GERAIS --- */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: var(--bg-color); 
-    color: var(--text-color); 
-    text-align: center;
-    overflow: hidden; 
+    font-family: Arial, sans-serif; display: flex; justify-content: center;
+    align-items: center; min-height: 100vh; margin: 0;
+    background-color: var(--bg-color); color: var(--text-color); 
+    text-align: center; overflow: hidden; 
     transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
-    background-color: var(--container-bg); 
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    min-width: 550px; /* Aumenta o container para acomodar a roleta de 500px */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: var(--container-bg); padding: 30px;
+    border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    min-width: 550px; /* Acomoda a roleta de 500px */
+    display: flex; flex-direction: column; align-items: center;
 }
 
 h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
-    color: var(--text-color);
-    background-color: transparent; 
+    color: var(--text-color); background-color: transparent; 
 }
 
 .theme-switch-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; 
-    width: 100%;
-    margin-bottom: 15px;
-    font-size: 0.9em;
+    display: flex; align-items: center; justify-content: flex-end; 
+    width: 100%; margin-bottom: 15px; font-size: 0.9em;
 }
 
 /* --- ESTILO DA ROLETA VISUAL (500px) --- */
@@ -73,73 +48,8 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 }
 
 #roleta-circulo {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    /* 8 Setores coloridos - O JS preencherá o resto do espaço */
-    background: conic-gradient(
-        #FFD700 0% 12.5%, #FF6347 12.5% 25%, #1E90FF 25% 37.5%, #32CD32 37.5% 50%, 
-        #8A2BE2 50% 62.5%, #FF1493 62.5% 75%, #8B4513 75% 87.5%, #708090 87.5% 100%
-    );
-    border: 8px solid var(--border-color); 
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    transition: transform 5s ease-out; 
-    position: relative; 
-}
-
-/* Ponteiro da Roleta (Maior) */
-#roleta-ponteiro {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent; 
-    border-right: 20px solid transparent; 
-    border-top: 40px solid var(--border-color); /* Triângulo */
-    top: -25px; 
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
-/* Estilo para os nomes fixos (Todos os 138+) */
-.roleta-nome-setor {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 250px; /* Metade do diâmetro */
-    text-align: center;
-    font-size: 0.8em; /* O JS irá reduzir este valor dinamicamente */
-    font-weight: bold;
-    color: white; 
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    transform-origin: 0 0; 
-    margin-left: -125px; /* Centraliza a largura (metade de 250px) */
-    margin-top: -10px; 
-    z-index: 2; 
-}
-
-/* Estilo para o nome ou informação central */
-.roleta-nome-temporario {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2.0em; /* Maior para o centro */
-    font-weight: bold;
-    color: var(--text-color); 
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
-    text-align: center;
-    z-index: 5;
-    line-height: 1.2;
-    padding: 10px;
-}
-
-/* (Restante do CSS permanece igual) */
-#roleta-circulo {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    /* NOVO: 20 Setores coloridos (5% cada) */
+    width: 100%; height: 100%; border-radius: 50%;
+    /* 20 Setores coloridos (para complexidade visual) */
     background: conic-gradient(
         #FFD700 0% 5%, #FF6347 5% 10%, #1E90FF 10% 15%, #32CD32 15% 20%, 
         #8A2BE2 20% 25%, #FF1493 25% 30%, #8B4513 30% 35%, #708090 35% 40%, 
@@ -152,3 +62,43 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
     transition: transform 5s ease-out; 
     position: relative; 
 }
+
+/* Ponteiro da Roleta (Maior) */
+#roleta-ponteiro {
+    position: absolute; width: 0; height: 0;
+    border-left: 20px solid transparent; border-right: 20px solid transparent; 
+    border-top: 40px solid var(--border-color); 
+    top: -25px; left: 50%; transform: translateX(-50%); z-index: 10;
+}
+
+/* Estilo para os nomes fixos (Todos os 138+) */
+.roleta-nome-setor {
+    position: absolute; top: 50%; left: 50%; width: 250px; /* Metade do diâmetro */
+    text-align: center;
+    font-size: 0.8em; /* O JS reduzirá isso dinamicamente */
+    font-weight: bold;
+    color: white; 
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    transform-origin: 0 0; 
+    margin-left: -125px; /* Centraliza a largura */
+    margin-top: -10px; 
+    z-index: 2; 
+    
+    /* Otimizações para nomes pequenos: */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    line-height: 1; 
+}
+
+/* Estilo para o nome ou informação central (grande e claro) */
+.roleta-nome-temporario {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.0em; 
+    font-weight: bold; color: var(--text-color); 
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+    text-align: center; z-index: 5; line-height: 1.2; padding: 10px;
+}
+
+/* (Restante do CSS permanece inalterado) */
