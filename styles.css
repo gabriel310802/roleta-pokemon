@@ -49,14 +49,8 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 
 #roleta-circulo {
     width: 100%; height: 100%; border-radius: 50%;
-    /* 20 Setores coloridos (para complexidade visual) */
-    background: conic-gradient(
-        #FFD700 0% 5%, #FF6347 5% 10%, #1E90FF 10% 15%, #32CD32 15% 20%, 
-        #8A2BE2 20% 25%, #FF1493 25% 30%, #8B4513 30% 35%, #708090 35% 40%, 
-        #FFA500 40% 45%, #008080 45% 50%, #C71585 50% 55%, #7FFFD4 55% 60%,
-        #DAA520 60% 65%, #DC143C 65% 70%, #4682B4 70% 75%, #00FF7F 75% 80%,
-        #9400D3 80% 85%, #FF69B4 85% 90%, #A0522D 90% 95%, #696969 95% 100%
-    );
+    /* O JS irá gerar o background conic-gradient com as 137 fatias */
+    background: #000; /* Fundo preto inicial */
     border: 8px solid var(--border-color); 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     transition: transform 5s ease-out; 
@@ -74,17 +68,17 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao {
 /* Estilo para os nomes fixos (Todos os 138+) */
 .roleta-nome-setor {
     position: absolute; top: 50%; left: 50%; width: 250px; /* Metade do diâmetro */
-    text-align: center;
-    font-size: 0.8em; /* O JS reduzirá isso dinamicamente */
+    text-align: left; /* Alinha o texto na direção do raio */
+    font-size: 0.8em; 
     font-weight: bold;
-    color: white; 
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    transform-origin: 0 0; 
-    margin-left: -125px; /* Centraliza a largura */
-    margin-top: -10px; 
+    color: var(--text-color); /* Mantenha a cor da fonte com o tema */
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.9); /* Sombra forte para contraste */
+    transform-origin: 0 0; /* Gira no centro */
+    margin-left: -5px; /* Ponto de partida do raio */
+    margin-top: -8px; 
     z-index: 2; 
     
-    /* Otimizações para nomes pequenos: */
+    /* Otimizações para nomes pequenos */
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
