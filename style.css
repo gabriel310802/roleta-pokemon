@@ -172,3 +172,140 @@ h1 {
     margin-top: -10px; /* Ajuste vertical */
     z-index: 2; /* Fica acima do círculo */
 }
+/* --- VARIAVEIS DE TEMA --- */
+:root {
+    /* Tema Claro Padrão */
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --container-bg: white;
+    --border-color: #333;
+    --card-border: #ccc;
+    --button-primary: #3b4cca;
+    --button-hover: #0033a0;
+}
+
+body.dark-theme {
+    /* Tema Escuro Ativado */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --container-bg: #1e1e1e;
+    --border-color: #bbb;
+    --card-border: #555;
+    --button-primary: #8a94ff;
+    --button-hover: #5e69ff;
+}
+
+/* --- ESTILOS GERAIS (USANDO VARIÁVEIS) --- */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--bg-color); /* Aplicando variável */
+    color: var(--text-color); /* Aplicando variável */
+    text-align: center;
+    overflow: hidden; 
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    background-color: var(--container-bg); /* Aplicando variável */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    min-width: 380px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, .seletor-geracao, .theme-switch-wrapper {
+    color: var(--text-color);
+}
+
+/* --- CHAVE DE TEMA --- */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Move para a direita */
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+/* ... (Se você quiser um estilo mais complexo para o switch, você pode adicionar aqui) ... */
+
+/* --- ESTILOS DA ROLETA (SEM MUDANÇAS DE COR SIGNIFICATIVAS, EXCETO BORDAS) --- */
+#roleta-wrapper {
+    position: relative; 
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#roleta-circulo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+        #FFD700 0% 12.5%, 
+        #FF6347 12.5% 25%, 
+        #1E90FF 25% 37.5%, 
+        #32CD32 37.5% 50%, 
+        #8A2BE2 50% 62.5%, 
+        #FF1493 62.5% 75%, 
+        #8B4513 75% 87.5%, 
+        #708090 87.5% 100% 
+    );
+    border: 8px solid var(--border-color); /* Aplicando variável */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    transition: transform 5s ease-out; 
+    position: relative; 
+}
+
+#roleta-ponteiro {
+    border-top: 30px solid var(--border-color); /* Aplicando variável */
+    /* ... (restante do estilo do ponteiro) ... */
+}
+/* ... (estilos roleta-nome-temporario, etc., permanecem iguais) ... */
+
+/* Botão */
+#btnGirar {
+    padding: 12px 25px; 
+    font-size: 1.2em;
+    background-color: var(--button-primary); /* Aplicando variável */
+    color: white;
+    border: none;
+    border-radius: 7px; 
+    cursor: pointer;
+    margin-top: 20px; 
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+#btnGirar:hover {
+    background-color: var(--button-hover); /* Aplicando variável */
+    transform: translateY(-2px);
+}
+
+#btnGirar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Display do Pokémon Sorteado */
+.pokemon-card {
+    margin-top: 30px; 
+    border-top: 2px dashed var(--card-border); /* Aplicando variável */
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* ... (restante dos estilos permanecem iguais) ... */
