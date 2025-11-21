@@ -1,7 +1,6 @@
-// --- LISTAS DE POKÉMONS (ORGANIZADAS POR GERAÇÃO) ---
+// --- LISTAS DE POKÉMONS (GERAÇÕES 1 a 5) ---
 
 const kantoPokemon = [
-    // 151 Pokémons da Geração 1
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -30,7 +29,6 @@ const kantoPokemon = [
 ];
 
 const johtoPokemon = [
-    // 100 Pokémons da Geração 2
     "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", 
     "Totodile", "Croconaw", "Feraligatr", "Sentret", "Furret", "Hoothoot", 
     "Noctowl", "Ledyba", "Ledian", "Spinarak", "Ariados", "Crobat", "Chinchou", 
@@ -50,7 +48,6 @@ const johtoPokemon = [
 ];
 
 const hoennPokemon = [
-    // 135 Pokémons da Geração 3 (252-386)
     "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", 
     "Mudkip", "Marshtomp", "Swampert", "Poochyena", "Mightyena", "Zigzagoon", 
     "Linoone", "Wurmple", "Silcoon", "Beautifly", "Cascoon", "Dustox", 
@@ -77,7 +74,6 @@ const hoennPokemon = [
 ];
 
 const sinnohPokemon = [
-    // 107 Pokémons da Geração 4 (387-493)
     "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", 
     "Piplup", "Prinplup", "Empoleon", "Starly", "Staravia", "Staraptor", 
     "Bidoof", "Bibarel", "Kricketot", "Kricketune", "Shinx", "Luxio", 
@@ -99,7 +95,6 @@ const sinnohPokemon = [
 ];
 
 const unovaPokemon = [
-    // 156 Pokémons da Geração 5 (494-649)
     "Victini", "Snivy", "Servine", "Serperior", "Tepig", "Pignite", 
     "Emboar", "Oshawott", "Dewott", "Samurott", "Patrat", "Watchog", 
     "Lillipup", "Herdier", "Stoutland", "Purrloin", "Liepard", "Pansage", 
@@ -135,7 +130,7 @@ const pokemonPorGeracao = {
     hoenn: hoennPokemon,
     sinnoh: sinnohPokemon,
     unova: unovaPokemon,
-    todas: kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon) // Combine TODAS as 5 gerações
+    todas: kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon) 
 };
 
 // --- REFERÊNCIAS DO DOM ---
@@ -144,48 +139,41 @@ const roletaCirculo = document.getElementById('roleta-circulo');
 const pokemonNomeH2 = document.getElementById('pokemon-nome');
 const pokemonImg = document.getElementById('pokemon-img');
 const seletorGeracao = document.getElementById('geracao');
+const themeToggle = document.getElementById('darkModeToggle');
 
 let currentRotation = 0; 
 
 
-// Função para obter o nome da geração formatado
+// --- FUNÇÕES DE LÓGICA DE GERAÇÃO ---
+
 function getNomeGeracao(chave) {
     switch (chave) {
-        case 'kanto':
-            return 'Geração 1 (Kanto)';
-        case 'johto':
-            return 'Geração 2 (Johto)';
-        case 'hoenn':
-            return 'Geração 3 (Hoenn)';
-        case 'sinnoh':
-            return 'Geração 4 (Sinnoh)';
-        case 'unova':
-            return 'Geração 5 (Unova)';
-        case 'todas':
-            return 'Gerações 1 a 5 (Todas)';
-        default:
-            return 'Selecione uma Geração';
+        case 'kanto': return 'Geração 1 (Kanto)';
+        case 'johto': return 'Geração 2 (Johto)';
+        case 'hoenn': return 'Geração 3 (Hoenn)';
+        case 'sinnoh': return 'Geração 4 (Sinnoh)';
+        case 'unova': return 'Geração 5 (Unova)';
+        case 'todas': return 'Gerações 1 a 5 (Todas)';
+        default: return 'Selecione uma Geração';
     }
 }
 
-// --- NOVO: FUNÇÃO PARA PREENCHER A ROLETA COM 8 NOMES ---
+// Função para preencher a roleta com 8 nomes (ilude a roleta preenchida)
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo
 
     const nomesVisiveis = 8;
     const anguloPorNome = 360 / nomesVisiveis;
 
-    // Adiciona 8 nomes da lista (ou repete se a lista for menor)
+    // Adiciona 8 nomes da lista (ou repete se a lista for menor que 8)
     for (let i = 0; i < nomesVisiveis; i++) {
-        const nome = lista[i % lista.length]; // Usa o módulo para evitar erro se lista for menor que 8
+        const nome = lista[i % lista.length]; 
         const nomeDiv = document.createElement('div');
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
-        // Calcula a rotação e a posição para posicionar o nome ao longo da borda
+        // Posiciona e rotaciona o nome
         const angulo = i * anguloPorNome;
-        
-        // CSS para centralizar e rotacionar o nome para que ele acompanhe o setor
         nomeDiv.style.transform = `rotate(${angulo}deg) translate(0, -120px) rotate(-${angulo}deg)`;
         
         roletaCirculo.appendChild(nomeDiv);
@@ -205,7 +193,6 @@ function atualizarDisplayGeracao() {
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
     const nomeGeracao = getNomeGeracao(geracaoSelecionada);
 
-    // Usa a nova função para preencher a roleta
     preencherRoletaComNomes(listaAtual, nomeGeracao);
 
     // Limpa o resultado anterior
@@ -232,10 +219,8 @@ function girarRoleta() {
 
     btnGirar.disabled = true;
     
-    // Remove o texto central (total de Pokémons) antes de girar
-    const infoText = roletaCirculo.querySelector('.roleta-nome-temporario');
-    if (infoText) infoText.remove();
-
+    // Remove os nomes dos setores e o texto central
+    roletaCirculo.innerHTML = '';
 
     const tempoGiroTotal = 5000; 
     const numVoltas = 5; 
@@ -244,7 +229,7 @@ function girarRoleta() {
     const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
     const pokemonSorteado = listaAtual[indiceSorteado];
 
-    // --- CÁLCULO DA ROTAÇÃO (O mesmo de antes) ---
+    // --- CÁLCULO DA ROTAÇÃO ---
     const numSetoresVisuais = 8; 
     const anguloPorSetor = 360 / numSetoresVisuais;
     const setorAlvo = indiceSorteado % numSetoresVisuais; 
@@ -259,12 +244,11 @@ function girarRoleta() {
     roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
 
     
-    // --- LÓGICA DO NOME TEMPORÁRIO (DE VOLTA AO SCROLL) ---
-    // Mesmo sem os 649 nomes na borda, o scroll central dá o efeito de roleta
+    // --- LÓGICA DO NOME EM SCROLL CENTRAL ---
     let scrollInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * listaAtual.length);
         const randomPokemonName = listaAtual[randomIndex];
-        // Adiciona o nome aleatório no centro
+        // Exibe o nome aleatório no centro
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
     }, 50);
 
@@ -285,8 +269,7 @@ function girarRoleta() {
     }, tempoGiroTotal);
 }
 
-// (Função exibirResultado e Listeners permanecem IGUAIS)
-
+// Função para exibir o resultado final e buscar a imagem
 async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
@@ -311,11 +294,8 @@ async function exibirResultado(nome) {
     }
 }
 
-btnGirar.addEventListener('click', girarRoleta);
-seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
-atualizarDisplayGeracao();
-// --- NOVO: LÓGICA DE TEMA ESCURO ---
-const themeToggle = document.getElementById('darkModeToggle');
+
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
 
 // Função para aplicar/remover a classe dark-theme
 function toggleTheme() {
@@ -328,28 +308,25 @@ function toggleTheme() {
     localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
 }
 
-// 1. Event Listener para a chave
-themeToggle.addEventListener('change', toggleTheme);
-
-// 2. Carrega o tema salvo ao iniciar a página
+// Carrega o tema salvo ao iniciar a página
 function loadTheme() {
     const savedTheme = localStorage.getItem('darkMode');
 
     if (savedTheme === 'enabled') {
-        // Se estiver salvo como escuro, marca o checkbox e aplica o tema
         themeToggle.checked = true;
         document.body.classList.add('dark-theme');
     } else {
-        // Garante que o checkbox não esteja marcado para o tema claro
         themeToggle.checked = false;
         document.body.classList.remove('dark-theme');
     }
 }
 
-// Chama a função de carregamento ao iniciar o script
-loadTheme();
-// --- FIM LÓGICA DE TEMA ESCURO ---
-
 
 // --- LISTENERS DE EVENTOS ---
-// ... (mantenha seus listeners existentes: btnGirar, seletorGeracao, atualizarDisplayGeracao) ...
+btnGirar.addEventListener('click', girarRoleta);
+seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
+themeToggle.addEventListener('change', toggleTheme);
+
+// Inicialização da página
+loadTheme();
+atualizarDisplayGeracao();
