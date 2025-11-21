@@ -54,6 +54,7 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao, #quantidade {
 
 #roleta-circulo {
     width: 100%; height: 100%; border-radius: 50%;
+    /* O JS irá gerar o background conic-gradient com as 137 fatias */
     background: #000; /* Cor inicial */
     border: 8px solid var(--border-color); 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
@@ -101,23 +102,6 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao, #quantidade {
     text-align: center; z-index: 5; line-height: 1.2; padding: 10px;
 }
 
-/* --- BOTÕES E DISPLAY --- */
-#btnGirar, #btnResetar {
-    padding: 12px 25px; font-size: 1.2em; border: none; border-radius: 7px; 
-    cursor: pointer; margin-top: 20px; transition: background-color 0.3s, transform 0.1s;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-#btnGirar {
-    background-color: var(--button-primary); color: white; margin-right: 15px;
-}
-#btnResetar {
-    background-color: #888; color: white;
-}
-#btnGirar:hover { background-color: var(--button-hover); transform: translateY(-2px); }
-#btnResetar:hover { background-color: #666; }
-.hidden { display: none !important; }
-
 /* --- ESTILO DOS CARDS DE RESULTADO --- */
 .pokemon-cards-container {
     display: flex;
@@ -137,10 +121,6 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao, #quantidade {
     width: 300px; 
     text-align: center;
     transition: transform 0.3s;
-}
-
-.pokemon-card-result:hover {
-    transform: translateY(-5px);
 }
 
 .card-title {
@@ -174,3 +154,4 @@ h1, .seletor-geracao, .theme-switch-wrapper, label, #geracao, #quantidade {
 .hp .stat-fill { background-color: var(--stat-hp); }
 .attack .stat-fill { background-color: var(--stat-atk); }
 .defense .stat-fill { background-color: var(--stat-def); }
+.hidden { display: none !important; }
