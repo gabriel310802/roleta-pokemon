@@ -168,21 +168,45 @@ function getNomeGeracao(chave) {
     }
 }
 
+// --- NOVO: FUNÇÃO PARA PREENCHER A ROLETA COM 8 NOMES ---
+function preencherRoletaComNomes(lista, nomeGeracao) {
+    roletaCirculo.innerHTML = ''; // Limpa o círculo
+
+    const nomesVisiveis = 8;
+    const anguloPorNome = 360 / nomesVisiveis;
+
+    // Adiciona 8 nomes da lista (ou repete se a lista for menor)
+    for (let i = 0; i < nomesVisiveis; i++) {
+        const nome = lista[i % lista.length]; // Usa o módulo para evitar erro se lista for menor que 8
+        const nomeDiv = document.createElement('div');
+        nomeDiv.className = 'roleta-nome-setor';
+        nomeDiv.textContent = nome;
+
+        // Calcula a rotação e a posição para posicionar o nome ao longo da borda
+        const angulo = i * anguloPorNome;
+        
+        // CSS para centralizar e rotacionar o nome para que ele acompanhe o setor
+        nomeDiv.style.transform = `rotate(${angulo}deg) translate(0, -120px) rotate(-${angulo}deg)`;
+        
+        roletaCirculo.appendChild(nomeDiv);
+    }
+    
+    // Adiciona o texto central (total de Pokémons)
+    const infoText = document.createElement('p');
+    infoText.className = 'roleta-nome-temporario';
+    infoText.innerHTML = `${nomeGeracao}<br>(${lista.length} Pokémon)`;
+    roletaCirculo.appendChild(infoText);
+}
+
+
 // Função para atualizar o display da roleta (antes de girar)
 function atualizarDisplayGeracao() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    
     const nomeGeracao = getNomeGeracao(geracaoSelecionada);
 
-    // Remove qualquer conteúdo anterior
-    roletaCirculo.innerHTML = '';
-    
-    // Adiciona o texto da Geração no centro da roleta
-    const infoText = document.createElement('p');
-    infoText.className = 'roleta-nome-temporario';
-    infoText.innerHTML = `${nomeGeracao}<br>(${listaAtual.length} Pokémon)`;
-    roletaCirculo.appendChild(infoText);
+    // Usa a nova função para preencher a roleta
+    preencherRoletaComNomes(listaAtual, nomeGeracao);
 
     // Limpa o resultado anterior
     pokemonNomeH2.textContent = ''; 
@@ -203,12 +227,15 @@ function girarRoleta() {
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
 
     if (!listaAtual || listaAtual.length === 0) {
-        roletaCirculo.innerHTML = '<p class="roleta-nome-temporario">Erro: Lista Vazia!</p>';
         return;
     }
 
     btnGirar.disabled = true;
-    roletaCirculo.innerHTML = '';
+    
+    // Remove o texto central (total de Pokémons) antes de girar
+    const infoText = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (infoText) infoText.remove();
+
 
     const tempoGiroTotal = 5000; 
     const numVoltas = 5; 
@@ -217,7 +244,7 @@ function girarRoleta() {
     const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
     const pokemonSorteado = listaAtual[indiceSorteado];
 
-    // --- CÁLCULO DA ROTAÇÃO ---
+    // --- CÁLCULO DA ROTAÇÃO (O mesmo de antes) ---
     const numSetoresVisuais = 8; 
     const anguloPorSetor = 360 / numSetoresVisuais;
     const setorAlvo = indiceSorteado % numSetoresVisuais; 
@@ -231,18 +258,22 @@ function girarRoleta() {
     roletaCirculo.style.transform = `rotate(${currentRotation}deg)`;
     roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
 
-    // --- LÓGICA DO NOME TEMPORÁRIO DURANTE O GIRO ---
+    
+    // --- LÓGICA DO NOME TEMPORÁRIO (DE VOLTA AO SCROLL) ---
+    // Mesmo sem os 649 nomes na borda, o scroll central dá o efeito de roleta
     let scrollInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * listaAtual.length);
         const randomPokemonName = listaAtual[randomIndex];
+        // Adiciona o nome aleatório no centro
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
     }, 50);
+
 
     setTimeout(() => {
         // 1. Para o intervalo de scroll
         clearInterval(scrollInterval);
         
-        // 2. Exibe o nome final do Pokémon sorteado no centro da roleta
+        // 2. Exibe o nome final no centro da roleta
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${pokemonSorteado}</p>`;
         
         // 3. Exibe o resultado final completo
@@ -254,20 +285,19 @@ function girarRoleta() {
     }, tempoGiroTotal);
 }
 
-// Função para exibir o resultado final e buscar a imagem
+// (Função exibirResultado e Listeners permanecem IGUAIS)
+
 async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
     try {
-        // Usa a lista combinada de TODAS as gerações para encontrar o ID correto (1 a 649)
         const listaCompleta = pokemonPorGeracao['todas']; 
-        const idPokemon = listaCompleta.indexOf(nome) + 1; // ID do Pokémon na Pokédex
+        const idPokemon = listaCompleta.indexOf(nome) + 1; 
 
         if (idPokemon === 0) {
              throw new Error("ID do Pokémon não encontrado.");
         }
 
-        // URL da imagem usando o ID na PokéAPI
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`;
         
         pokemonImg.src = imageUrl;
@@ -281,9 +311,6 @@ async function exibirResultado(nome) {
     }
 }
 
-// --- LISTENERS DE EVENTOS ---
 btnGirar.addEventListener('click', girarRoleta);
 seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
-
-// Chama a função ao carregar a página para mostrar a seleção padrão (Kanto)
 atualizarDisplayGeracao();
