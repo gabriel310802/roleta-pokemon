@@ -1,5 +1,7 @@
-// Lista dos 151 Pokémons da Geração 1 (Kanto)
+// --- LISTAS DE POKÉMONS (ORGANIZADAS POR GERAÇÃO) ---
+
 const kantoPokemon = [
+    // 151 Pokémons da Geração 1 (Seu código original)
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -26,6 +28,7 @@ const kantoPokemon = [
     "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
     "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"
 ];
+
 // NOVOS 100 POKÉMONS da Geração 2 (Johto)
 const johtoPokemon = [
     "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", 
