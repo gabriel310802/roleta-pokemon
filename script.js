@@ -57,10 +57,12 @@ const pokemonPorGeracao = {
 
 // --- REFERÊNCIAS DO DOM ---
 const btnGirar = document.getElementById('btnGirar');
-const resultadoDiv = document.getElementById('resultado');
+const roletaCirculo = document.getElementById('roleta-circulo'); // Agora a roleta visual
 const pokemonNomeH2 = document.getElementById('pokemon-nome');
 const pokemonImg = document.getElementById('pokemon-img');
 const seletorGeracao = document.getElementById('geracao');
+
+let currentRotation = 0; // Para rastrear a rotação anterior e garantir giro contínuo
 
 
 // Função para obter o nome da geração formatado
@@ -77,88 +79,123 @@ function getNomeGeracao(chave) {
     }
 }
 
-// Função para atualizar o display com a geração atual
+// Função para atualizar o display da roleta (antes de girar)
 function atualizarDisplayGeracao() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
     
     const nomeGeracao = getNomeGeracao(geracaoSelecionada);
 
-    // Atualiza o display da roleta com a geração e a contagem
-    resultadoDiv.innerHTML = `<p>${nomeGeracao}</p><p>(${listaAtual.length} Pokémon)</p>`;
+    // Remove qualquer nome temporário do giro anterior
+    const tempName = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (tempName) {
+        tempName.remove();
+    }
     
+    // Adiciona o texto da Geração no centro da roleta
+    const infoText = document.createElement('p');
+    infoText.className = 'roleta-nome-temporario';
+    infoText.innerHTML = `${nomeGeracao}<br>(${listaAtual.length} Pokémon)`;
+    roletaCirculo.appendChild(infoText);
+
     // Limpa o resultado anterior
     pokemonNomeH2.textContent = ''; 
     pokemonImg.classList.add('hidden'); 
+
+    // Reseta a rotação da roleta visual (Para o estado inicial)
+    roletaCirculo.style.transition = 'none'; // Desativa a transição
+    roletaCirculo.style.transform = `rotate(0deg)`;
+    setTimeout(() => {
+        roletaCirculo.style.transition = 'transform 5s ease-out'; // Reativa a transição
+    }, 50);
+    currentRotation = 0;
 }
 
-// Função principal para girar a roleta COM SCROLL DE NOMES
+// Função principal para girar a roleta visual e sortear
 function girarRoleta() {
     const geracaoSelecionada = seletorGeracao.value;
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
 
     if (!listaAtual || listaAtual.length === 0) {
-        resultadoDiv.innerHTML = '<p>Erro: Lista de Pokémon Vazia!</p>';
+        // Exibe erro no centro da roleta
+        roletaCirculo.innerHTML = '<p class="roleta-nome-temporario">Erro: Lista Vazia!</p>';
         return;
     }
 
-    // Inicia a animação e desabilita o botão
+    // Desabilita o botão
     btnGirar.disabled = true;
-    resultadoDiv.classList.add('girando');
-    pokemonNomeH2.textContent = '';
-    pokemonImg.classList.add('hidden');
 
-    const tempoGiro = 3000; // 3.0 segundos para o giro total
-    const intervaloScroll = 50; // Atualiza o nome a cada 50 milissegundos (o que cria o efeito de roleta)
+    // Remove o texto inicial da Geração
+    const tempName = roletaCirculo.querySelector('.roleta-nome-temporario');
+    if (tempName) {
+        tempName.remove();
+    }
 
-    // --- LÓGICA DO SCROLL DE NOMES ---
+    const tempoGiroTotal = 5000; // 5 segundos para o giro completo e parada
+    const numVoltas = 5; // Número mínimo de voltas (1800 graus)
+    
+    // Sorteia o Pokémon final
+    const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
+    const pokemonSorteado = listaAtual[indiceSorteado];
+
+    // --- CÁLCULO DA ROTAÇÃO ---
+    // A roleta no CSS tem 8 setores (45 graus cada). Usamos isso para garantir a parada em um setor visual.
+    const numSetoresVisuais = 8; 
+    const anguloPorSetor = 360 / numSetoresVisuais;
+    
+    // Mapeamos o Pokémon sorteado para um "setor visual" arbitrário
+    const setorAlvo = indiceSorteado % numSetoresVisuais; 
+    
+    // Define o ângulo de parada dentro do setor (com aleatoriedade)
+    let anguloParada = (setorAlvo * anguloPorSetor) + (Math.random() * anguloPorSetor);
+    anguloParada += (anguloPorSetor / 2); // Aponta para o meio do setor
+
+    // Subtraímos a rotação anterior para garantir que o giro comece do estado atual
+    // E adicionamos as voltas completas
+    const giroFinal = (numVoltas * 360) + anguloParada; 
+    currentRotation += giroFinal; // Atualiza a rotação acumulada
+
+    // Define a rotação e a transição
+    roletaCirculo.style.transform = `rotate(${currentRotation}deg)`;
+    roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
+
+    // --- LÓGICA DO NOME TEMPORÁRIO DURANTE O GIRO ---
     let scrollInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * listaAtual.length);
         const randomPokemonName = listaAtual[randomIndex];
         
-        // Exibe o nome aleatório na área da roleta
-        // O <p> é necessário para garantir o estilo correto dentro da Pokebola
-        resultadoDiv.innerHTML = `<p>${randomPokemonName}</p>`;
-    }, intervaloScroll);
-    // --- FIM LÓGICA DO SCROLL ---
+        // Exibe o nome aleatório no centro
+        roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
+    }, 50);
 
     setTimeout(() => {
-        // 1. Para o intervalo de scroll e a animação
+        // 1. Para o intervalo de scroll
         clearInterval(scrollInterval);
-        resultadoDiv.classList.remove('girando');
         
-        // 2. Seleciona o Pokémon final
-        const indiceSorteado = Math.floor(Math.random() * listaAtual.length);
-        const pokemonSorteado = listaAtual[indiceSorteado];
+        // 2. Exibe o nome final do Pokémon sorteado no centro da roleta
+        roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${pokemonSorteado}</p>`;
         
-        // 3. Exibe o resultado final
+        // 3. Exibe o resultado final completo (imagem e nome abaixo da roleta)
         exibirResultado(pokemonSorteado);
 
         // 4. Reabilita o botão
         btnGirar.disabled = false;
 
-    }, tempoGiro);
+    }, tempoGiroTotal);
 }
 
 // Função para exibir o resultado final e buscar a imagem
 async function exibirResultado(nome) {
-    // Exibe o nome do Pokémon na área da Pokebola
-    // Usamos uma classe para garantir que o nome se destaque, caso o CSS original use.
-    resultadoDiv.innerHTML = `<p class="nome-final">${nome}</p>`;
     pokemonNomeH2.textContent = nome;
 
     try {
-        // A lista combinada (todas) é usada para encontrar o ID correto (1 a 251)
         const listaCompleta = pokemonPorGeracao['todas'];
-        
-        // O ID é o índice na lista completa + 1
         const idPokemon = listaCompleta.indexOf(nome) + 1;
 
         if (idPokemon === 0) {
              throw new Error("ID do Pokémon não encontrado.");
         }
 
-        // URL da imagem usando o ID na PokéAPI
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`;
         
         pokemonImg.src = imageUrl;
