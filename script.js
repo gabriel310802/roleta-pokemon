@@ -1,5 +1,7 @@
-// Lista dos 151 Pokémons da Geração 1 (Kanto)
+// --- LISTAS DE POKÉMONS (ORGANIZADAS POR GERAÇÃO) ---
+
 const kantoPokemon = [
+    // 151 Pokémons da Geração 1
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -27,98 +29,33 @@ const kantoPokemon = [
     "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"
 ];
 
+const johtoPokemon = [
+    // 100 Pokémons da Geração 2
+    "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", 
+    "Totodile", "Croconaw", "Feraligatr", "Sentret", "Furret", "Hoothoot", 
+    "Noctowl", "Ledyba", "Ledian", "Spinarak", "Ariados", "Crobat", "Chinchou", 
+    "Lanturn", "Pichu", "Cleffa", "Igglybuff", "Togepi", "Togetic", "Natu", 
+    "Xatu", "Mareep", "Flaaffy", "Ampharos", "Bellossom", "Marill", "Azumarill", 
+    "Sudowoodo", "Politoed", "Hoppip", "Skiploom", "Jumpluff", "Aipom", 
+    "Sunkern", "Sunflora", "Yanma", "Wooper", "Quagsire", "Espeon", "Umbreon", 
+    "Murkrow", "Slowking", "Misdreavus", "Unown", "Wobbuffet", "Girafarig", 
+    "Pineco", "Forretress", "Dunsparce", "Gligar", "Steelix", "Snubbull", 
+    "Granbull", "Qwilfish", "Scizor", "Shuckle", "Heracross", "Sneasel", 
+    "Teddiursa", "Ursaring", "Slugma", "Magcargo", "Swinub", "Piloswine", 
+    "Corsola", "Remoraid", "Octillery", "Delibird", "Mantine", "Skarmory", 
+    "Houndour", "Houndoom", "Kingdra", "Phanpy", "Donphan", "Porygon2", 
+    "Stantler", "Smeargle", "Tyrogue", "Hitmontop", "Smoochum", "Elekid", 
+    "Magby", "Miltank", "Blissey", "Raikou", "Entei", "Suicune", "Larvitar", 
+    "Pupitar", "Tyranitar", "Lugia", "Ho-Oh", "Celebi"
+];
+
+const pokemonPorGeracao = {
+    kanto: kantoPokemon,
+    johto: johtoPokemon,
+    todas: kantoPokemon.concat(johtoPokemon) // Lista combinada
+};
+
+// --- REFERÊNCIAS DO DOM ---
 const btnGirar = document.getElementById('btnGirar');
 const resultadoDiv = document.getElementById('resultado');
-const pokemonNomeH2 = document.getElementById('pokemon-nome');
-const pokemonImg = document.getElementById('pokemon-img');
-
-// Função principal para girar a roleta
-function girarRoleta() {
-    // 1. Desabilita o botão e inicia a animação
-    btnGirar.disabled = true;
-    resultadoDiv.textContent = 'GIRANDO...';
-    resultadoDiv.classList.add('girando');
-    pokemonNomeH2.textContent = '';
-    pokemonImg.classList.add('hidden');
-
-    // 2. Define um tempo de "giro" (simulado)
-    const tempoGiro = 2500; // 2.5 segundos
-
-    setTimeout(() => {
-        // 3. Para o giro e seleciona o Pokémon
-        resultadoDiv.classList.remove('girando');
-        
-        const indiceSorteado = Math.floor(Math.random() * kantoPokemon.length);
-        const pokemonSorteado = kantoPokemon[indiceSorteado];
-        
-        // 4. Exibe o resultado e busca a imagem
-        exibirResultado(pokemonSorteado);
-
-        // 5. Reabilita o botão
-        btnGirar.disabled = false;
-
-    }, tempoGiro);
-}
-
-// Função para exibir o resultado final e buscar a imagem
-async function exibirResultado(nome) {
-    resultadoDiv.innerHTML = `<p>${nome}</p>`;
-    pokemonNomeH2.textContent = nome;
-
-    try {
-        // O nome precisa estar em minúsculas para a PokéAPI
-        const nomeApi = nome.toLowerCase();
-
-        // Busca o ID do Pokémon, que é o índice na lista + 1
-        const idPokemon = kantoPokemon.indexOf(nome) + 1;
-
-        // URL da imagem de uma fonte pública (PokéAPI)
-        // Usamos o ID para garantir a imagem correta (melhor que o nome)
-        const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`;
-        
-        pokemonImg.src = imageUrl;
-        pokemonImg.alt = `Imagem do Pokémon ${nome}`;
-        pokemonImg.classList.remove('hidden');
-
-    } catch (error) {
-        console.error('Erro ao buscar imagem do Pokémon:', error);
-        pokemonImg.classList.add('hidden');
-        pokemonNomeH2.textContent = `${nome} (Erro ao carregar imagem)`;
-    }
-}
-
-// Adiciona o evento de clique ao botão
-btnGirar.addEventListener('click', girarRoleta);
-// --- FUNÇÃO PARA ATUALIZAR O DISPLAY COM A GERAÇÃO ATUAL ---
-function atualizarDisplayGeracao() {
-    const geracaoSelecionada = seletorGeracao.value;
-    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-
-    let nomeGeracao = '';
-    
-    switch (geracaoSelecionada) {
-        case 'kanto':
-            nomeGeracao = 'Geração 1 (Kanto)';
-            break;
-        case 'johto':
-            nomeGeracao = 'Geração 2 (Johto)';
-            break;
-        case 'todas':
-            nomeGeracao = 'Gerações 1 e 2 (Todas)';
-            break;
-    }
-
-    resultadoDiv.innerHTML = `<p>${nomeGeracao}</p><p>(${listaAtual.length} Pokémon)</p>`;
-    pokemonNomeH2.textContent = ''; // Limpa o nome do Pokémon anterior
-    pokemonImg.classList.add('hidden'); // Esconde a imagem
-}
-
-// --- LISTENERS DE EVENTOS ---
-// 1. Adiciona o evento de clique ao botão (Seu código original)
-btnGirar.addEventListener('click', girarRoleta);
-
-// 2. ADICIONA O EVENTO 'CHANGE' AO SELETOR DE GERAÇÃO
-seletorGeracao.addEventListener('change', atualizarDisplayGeracao);
-
-// 3. CHAMA A FUNÇÃO AO INICIAR para mostrar a geração padrão (Kanto)
-atualizarDisplayGeracao();
+const pokemonNomeH2 = document.
