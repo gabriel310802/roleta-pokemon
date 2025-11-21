@@ -164,7 +164,8 @@ const seletorGeracao = document.getElementById('geracao');
 const themeToggle = document.getElementById('darkModeToggle');
 
 let currentRotation = 0; 
-const DISTANCIA_DA_BORDA = 220; // 500px / 2 (raio) - 30px (margem) = 220px
+// NOVO: Distância para 1000px de diâmetro. (1000/2) - 30 = 470px
+const DISTANCIA_DA_BORDA = 470; 
 
 // Cores para os setores da roleta (repetidas)
 const CORES_SETORES = [
@@ -186,9 +187,9 @@ function getNomeGeracao(chave) {
     }
 }
 
-// NOVO: preencherRoletaComNomes agora cria o conic-gradient dinamicamente e os nomes no centro
+// NOVO: preencherRoletaComNomes - Gera o conic-gradient e os nomes na borda
 function preencherRoletaComNomes(lista, nomeGeracao) {
-    roletaCirculo.innerHTML = ''; // Limpa o círculo para adicionar nomes na borda e o texto central
+    roletaCirculo.innerHTML = ''; // Limpa o círculo 
 
     const numSetores = lista.length; 
     const anguloPorSetor = 360 / numSetores;
@@ -199,7 +200,8 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
     for (let i = 0; i < numSetores; i++) {
         const cor = CORES_SETORES[i % CORES_SETORES.length];
         const anguloFim = ((i + 1) * anguloPorSetor).toFixed(2);
-        gradientColors.push(`${cor} ${anguloFim}deg`);
+        const anguloInicio = (i * anguloPorSetor).toFixed(2);
+        gradientColors.push(`${cor} ${anguloInicio}deg ${anguloFim}deg`);
     }
 
     // 2. Aplica o conic-gradient no background (cria as 137+ fatias visuais)
@@ -211,14 +213,15 @@ function preencherRoletaComNomes(lista, nomeGeracao) {
         nomeDiv.className = 'roleta-nome-setor';
         nomeDiv.textContent = nome;
 
-        // Fórmula para o tamanho da fonte
-        nomeDiv.style.fontSize = `${Math.max(0.2, 0.8 - (numSetores / 100) * 0.15)}em`; 
+        // Fórmula para o tamanho da fonte (Ajustada para o tamanho 1000px)
+        nomeDiv.style.fontSize = `${Math.max(0.5, 1.2 - (numSetores / 100) * 0.15)}em`; 
         
         // Posiciona e rotaciona o nome
         const angulo = i * anguloPorSetor;
-        // Ajustamos para o meio da fatia e rotacionamos diagonalmente (ângulo + 90)
+        // Ajuste para o meio da fatia
         const anguloTexto = angulo + (anguloPorSetor / 2);
         
+        // Aplica a rotação do setor e a rotação de 90 graus para deixar o texto na diagonal (seguindo o raio)
         nomeDiv.style.transform = `rotate(${anguloTexto}deg) translate(0, -${DISTANCIA_DA_BORDA}px) rotate(90deg)`;
         
         roletaCirculo.appendChild(nomeDiv);
@@ -263,11 +266,16 @@ function girarRoleta() {
 
     btnGirar.disabled = true;
     
-    // Limpa APENAS o texto central para o giro
+    // 1. Limpa APENAS o texto central e exibe o "GIRANDO..."
     const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
     if (centroTextElement) {
-        centroTextElement.textContent = ''; 
+        centroTextElement.textContent = 'GIRANDO...'; 
+        centroTextElement.style.color = 'var(--button-primary)';
     }
+
+    // 2. Remove os nomes da borda durante o giro para melhor desempenho e menos confusão visual
+    roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
+
 
     const tempoGiroTotal = 5000; 
     const numVoltas = 5; 
@@ -293,40 +301,27 @@ function girarRoleta() {
     roletaCirculo.style.transition = `transform ${tempoGiroTotal / 1000}s ease-out`;
 
     
-    // --- LÓGICA DO NOME EM SCROLL CENTRAL (DURANTE O GIRO) ---
-    let scrollInterval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * listaAtual.length);
-        const randomPokemonName = listaAtual[randomIndex];
-        // Exibe o nome aleatório no centro
-        roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${randomPokemonName}</p>`;
-        
-        // Remove os nomes da borda durante o giro para melhor desempenho e menos confusão visual
-        roletaCirculo.querySelectorAll('.roleta-nome-setor').forEach(el => el.style.opacity = 0);
-    }, 50);
-
-
     setTimeout(() => {
-        // 1. Para o intervalo de scroll
-        clearInterval(scrollInterval);
-        
-        // 2. Exibe o nome final no centro da roleta
+        // 1. Exibe o nome final no centro da roleta
         roletaCirculo.innerHTML = `<p class="roleta-nome-temporario">${pokemonSorteado}</p>`;
         
-        // 3. Exibe o resultado final completo
+        // 2. Exibe o resultado final completo
         exibirResultado(pokemonSorteado);
 
-        // 4. Reabilita o botão
+        // 3. Reabilita o botão
         btnGirar.disabled = false;
 
-        // 5. Restaura os nomes da borda
+        // 4. Restaura os nomes da borda
         // Chamamos a função de preenchimento para redesenhar o círculo após a parada
-        preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
+        setTimeout(() => {
+             preencherRoletaComNomes(listaAtual, getNomeGeracao(geracaoSelecionada));
+        }, 100);
 
 
     }, tempoGiroTotal);
 }
 
-// Função para exibir o resultado final e buscar a imagem (Permanecem Iguais)
+// Função para exibir o resultado final e buscar a imagem
 async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
@@ -352,7 +347,7 @@ async function exibirResultado(nome) {
 }
 
 
-// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO (Permanecem Iguais) ---
+// --- FUNÇÕES DE LÓGICA DE TEMA ESCURO ---
 
 function toggleTheme() {
     const isDark = themeToggle.checked;
