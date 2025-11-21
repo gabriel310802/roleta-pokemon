@@ -1,7 +1,7 @@
 // --- LISTAS DE POKÉMONS (GERAÇÕES 1 a 5) ---
 
+// Listas originais de cada Geração (usamos o array completo e filtramos depois)
 const kantoPokemon = [
-    // 151 Pokémons da Geração 1
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
     "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
     "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
@@ -124,14 +124,61 @@ const unovaPokemon = [
     "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
 ];
 
+// --- LISTAS DE POKÉMONS A SEREM EXCLUÍDOS ---
+const POKEMON_PARA_EXCLUIR = [
+    // --- Geração 1 (Kanto) ---
+    // Iniciais e Evoluções
+    "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise",
+    // Lendários/Míticos
+    "Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew",
 
+    // --- Geração 2 (Johto) ---
+    // Iniciais e Evoluções
+    "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", "Totodile", "Croconaw", "Feraligatr",
+    // Lendários/Míticos
+    "Raikou", "Entei", "Suicune", "Lugia", "Ho-Oh", "Celebi",
+
+    // --- Geração 3 (Hoenn) ---
+    // Iniciais e Evoluções
+    "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert",
+    // Lendários/Míticos
+    "Regirock", "Regice", "Registeel", "Latias", "Latios", "Kyogre", "Groudon", "Rayquaza", "Jirachi", "Deoxys",
+    
+    // --- Geração 4 (Sinnoh) ---
+    // Iniciais e Evoluções
+    "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon",
+    // Lendários/Míticos
+    "Uxie", "Mesprit", "Azelf", "Dialga", "Palkia", "Heatran", "Regigigas", "Giratina", "Cresselia", "Phione", "Manaphy", "Darkrai", "Shaymin", "Arceus",
+    
+    // --- Geração 5 (Unova) ---
+    // Iniciais e Evoluções
+    "Snivy", "Servine", "Serperior", "Tepig", "Pignite", "Emboar", "Oshawott", "Dewott", "Samurott",
+    // Lendários/Míticos e especiais (Victini)
+    "Victini", "Cobalion", "Terrakion", "Virizion", "Tornadus", "Thundurus", "Reshiram", "Zekrom", "Landorus", "Kyurem", "Keldeo", "Meloetta", "Genesect"
+];
+
+// --- FUNÇÃO DE FILTRO ---
+function filtrarPokemon(lista) {
+    // Retorna uma nova lista, excluindo os nomes que estão na lista POKEMON_PARA_EXCLUIR
+    return lista.filter(nome => !POKEMON_PARA_EXCLUIR.includes(nome));
+}
+
+// --- APLICAÇÃO DO FILTRO NAS LISTAS ---
+const kantoFiltrada = filtrarPokemon(kantoPokemon);
+const johtoFiltrada = filtrarPokemon(johtoPokemon);
+const hoennFiltrada = filtrarPokemon(hoennPokemon);
+const sinnohFiltrada = filtrarPokemon(sinnohPokemon);
+const unovaFiltrada = filtrarPokemon(unovaPokemon);
+
+// Objeto principal com as listas JÁ FILTRADAS
 const pokemonPorGeracao = {
-    kanto: kantoPokemon,
-    johto: johtoPokemon,
-    hoenn: hoennPokemon,
-    sinnoh: sinnohPokemon,
-    unova: unovaPokemon,
-    todas: kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon) 
+    kanto: kantoFiltrada,
+    johto: johtoFiltrada,
+    hoenn: hoennFiltrada,
+    sinnoh: sinnohFiltrada,
+    unova: unovaFiltrada,
+    // A lista "todas" também é filtrada, unindo todas as listas filtradas
+    todas: kantoFiltrada.concat(johtoFiltrada, hoennFiltrada, sinnohFiltrada, unovaFiltrada)
 };
 
 // --- REFERÊNCIAS DO DOM ---
@@ -148,18 +195,19 @@ let currentRotation = 0;
 // --- FUNÇÕES DE LÓGICA DE GERAÇÃO E ROLETA ---
 
 function getNomeGeracao(chave) {
+    // Apenas mudamos o texto para refletir que as listas são 'filtradas'
     switch (chave) {
-        case 'kanto': return 'Geração 1 (Kanto)';
-        case 'johto': return 'Geração 2 (Johto)';
-        case 'hoenn': return 'Geração 3 (Hoenn)';
-        case 'sinnoh': return 'Geração 4 (Sinnoh)';
-        case 'unova': return 'Geração 5 (Unova)';
-        case 'todas': return 'Gerações 1 a 5 (Todas)';
+        case 'kanto': return 'Geração 1 (Kanto) - Filtrada';
+        case 'johto': return 'Geração 2 (Johto) - Filtrada';
+        case 'hoenn': return 'Geração 3 (Hoenn) - Filtrada';
+        case 'sinnoh': return 'Geração 4 (Sinnoh) - Filtrada';
+        case 'unova': return 'Geração 5 (Unova) - Filtrada';
+        case 'todas': return 'Gerações 1 a 5 (Todas) - Filtrada';
         default: return 'Selecione uma Geração';
     }
 }
 
-// CORREÇÃO AQUI: Garante que os 8 primeiros nomes da lista atual sejam exibidos.
+// CORREÇÃO: Garante que os 8 primeiros nomes da lista atual sejam exibidos.
 function preencherRoletaComNomes(lista, nomeGeracao) {
     roletaCirculo.innerHTML = ''; // Limpa o círculo
 
@@ -231,8 +279,10 @@ function girarRoleta() {
     const pokemonSorteado = listaAtual[indiceSorteado];
 
     // --- CÁLCULO DA ROTAÇÃO ---
+    // Mantemos 8 setores visuais, mas o sorteio é de 137, por exemplo.
     const numSetoresVisuais = 8; 
     const anguloPorSetor = 360 / numSetoresVisuais;
+    // O setor alvo é calculado usando o índice do sorteado em relação aos 8 setores visuais
     const setorAlvo = indiceSorteado % numSetoresVisuais; 
     let anguloParada = (setorAlvo * anguloPorSetor) + (Math.random() * anguloPorSetor);
     anguloParada += (anguloPorSetor / 2); 
@@ -275,10 +325,12 @@ async function exibirResultado(nome) {
     pokemonNomeH2.textContent = nome;
 
     try {
-        const listaCompleta = pokemonPorGeracao['todas']; 
-        const idPokemon = listaCompleta.indexOf(nome) + 1; 
+        // A lista completa para buscar o ID precisa ser a lista original (não filtrada) para manter a ordem correta do Pokedex (ID 1 = Bulbasaur)
+        const listaCompletaOriginal = kantoPokemon.concat(johtoPokemon, hoennPokemon, sinnohPokemon, unovaPokemon); 
+        const idPokemon = listaCompletaOriginal.indexOf(nome) + 1; 
 
         if (idPokemon === 0) {
+             // Se o nome não for encontrado na lista original (o que não deve acontecer)
              throw new Error("ID do Pokémon não encontrado.");
         }
 
