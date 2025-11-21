@@ -86,11 +86,8 @@ function atualizarDisplayGeracao() {
     
     const nomeGeracao = getNomeGeracao(geracaoSelecionada);
 
-    // Remove qualquer nome temporário do giro anterior
-    const tempName = roletaCirculo.querySelector('.roleta-nome-temporario');
-    if (tempName) {
-        tempName.remove();
-    }
+    // Remove qualquer conteúdo anterior
+    roletaCirculo.innerHTML = '';
     
     // Adiciona o texto da Geração no centro da roleta
     const infoText = document.createElement('p');
@@ -117,7 +114,6 @@ function girarRoleta() {
     const listaAtual = pokemonPorGeracao[geracaoSelecionada];
 
     if (!listaAtual || listaAtual.length === 0) {
-        // Exibe erro no centro da roleta
         roletaCirculo.innerHTML = '<p class="roleta-nome-temporario">Erro: Lista Vazia!</p>';
         return;
     }
@@ -125,11 +121,9 @@ function girarRoleta() {
     // Desabilita o botão
     btnGirar.disabled = true;
 
-    // Remove o texto inicial da Geração
-    const tempName = roletaCirculo.querySelector('.roleta-nome-temporario');
-    if (tempName) {
-        tempName.remove();
-    }
+    // Limpa o círculo da roleta
+    roletaCirculo.innerHTML = '';
+
 
     const tempoGiroTotal = 5000; // 5 segundos para o giro completo e parada
     const numVoltas = 5; // Número mínimo de voltas (1800 graus)
@@ -139,7 +133,7 @@ function girarRoleta() {
     const pokemonSorteado = listaAtual[indiceSorteado];
 
     // --- CÁLCULO DA ROTAÇÃO ---
-    // A roleta no CSS tem 8 setores (45 graus cada). Usamos isso para garantir a parada em um setor visual.
+    // A roleta no CSS tem 8 setores (45 graus cada). 
     const numSetoresVisuais = 8; 
     const anguloPorSetor = 360 / numSetoresVisuais;
     
@@ -149,9 +143,8 @@ function girarRoleta() {
     // Define o ângulo de parada dentro do setor (com aleatoriedade)
     let anguloParada = (setorAlvo * anguloPorSetor) + (Math.random() * anguloPorSetor);
     anguloParada += (anguloPorSetor / 2); // Aponta para o meio do setor
-
-    // Subtraímos a rotação anterior para garantir que o giro comece do estado atual
-    // E adicionamos as voltas completas
+    
+    // Adiciona as voltas completas
     const giroFinal = (numVoltas * 360) + anguloParada; 
     currentRotation += giroFinal; // Atualiza a rotação acumulada
 
