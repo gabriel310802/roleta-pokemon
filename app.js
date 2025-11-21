@@ -334,8 +334,8 @@ function resetarRoleta() {
 // Função principal para girar a roleta visual e sortear
 function girarRoleta() {
     const geracaoSelecionada = seletorGeracao.value;
-    const listaAtual = pokemonPorGeracao[geracaoSelecionada];
-    const quantidade = parseInt(quantidadeSelect.value); // Pega a quantidade a ser sorteada
+    const listaAtual = pokemonPorCageneroao[geracaoSelecionada]; // ERA 'pokemonPorCageneroao' AGORA É 'pokemonPorGeracao'
+    const quantidade = parseInt(quantidadeSelect.value); 
 
     if (!listaAtual || listaAtual.length === 0) {
         return;
@@ -344,9 +344,11 @@ function girarRoleta() {
     btnGirar.disabled = true;
     btnResetar.classList.add('hidden');
     
-    // 1. Inicia o som
-    // somRoleta.currentTime = 0; 
-    // somRoleta.play(); // Descomente esta linha quando tiver o arquivo de áudio
+    // 1. Inicia o som (Com checagem para evitar erro se o arquivo MP3 não estiver no GitHub)
+    if (somRoleta) {
+        somRoleta.currentTime = 0; 
+        somRoleta.play().catch(e => console.log('Áudio não pode ser tocado: ', e)); 
+    }
 
     // 2. Exibe o "GIRANDO..." no centro
     const centroTextElement = roletaCirculo.querySelector('.roleta-nome-temporario');
@@ -368,7 +370,6 @@ function girarRoleta() {
     const numSetores = listaAtual.length; 
     const anguloPorSetor = 360 / numSetores; 
     
-    // Sorteamos o ÚLTIMO Pokémon para determinar onde a roleta irá parar visualmente
     const ultimoIndiceSorteado = Math.floor(Math.random() * listaAtual.length);
     
     for (let i = 0; i < quantidade; i++) {
@@ -378,7 +379,7 @@ function girarRoleta() {
 
     // --- 4. CÁLCULO DA PARADA VISUAL ---
     const anguloParada = (ultimoIndiceSorteado * anguloPorSetor) + (anguloPorSetor / 2);
-    const anguloAjustado = 360 - anguloParada; // Corrigido para apontar corretamente para o topo
+    const anguloAjustado = 360 - anguloParada; 
 
     const giroFinal = (numVoltas * 360) + anguloAjustado; 
     currentRotation += giroFinal; 
@@ -389,7 +390,7 @@ function girarRoleta() {
 
     
     setTimeout(() => {
-        // somRoleta.pause(); // Descomente esta linha quando tiver o arquivo de áudio
+        if (somRoleta) somRoleta.pause();
         
         // 1. Exibe o nome final no centro da roleta
         if (centroTextElement) {
